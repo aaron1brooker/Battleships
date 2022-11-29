@@ -10,11 +10,9 @@ Creating a Battleships game that supports multiple different game modes.
 5) One player v computer (hidden mines) game.
 6) Two player game (hidden mines) game.
 7) Computer v computer (hidden mines).
-8) Quit.
 
-The code has been written in C++ because I felt that strongly typed language will aid development and reduce bugs as the compiler can catch a vast amount of errors. Also, C++ is a low-latency language however, with the size of this game, this will not result in a significant advantage over other languages. This is also a language I have had great experience with therefore it seemed like the right language for the project.
+The code will be written in Python due to its flexible nature compared to a strongly typed language like C++. Another reason for the choice of the language is that Python also supports a game library called PyGame which can produce a UI for the user to play the game. This is a simple module that I have had experience with before hence why I have chosen this language. A negative of Python is that it is not that efficient compared to C++ however we do not have any low latency requirements and the program will be relatively small therefore it would not make a noticeable difference if we opted to use C++.
 
-I have developed in an agile methodology as I anticipated that I would be adding additional features/updates to the game hence why I chose this approach.
+I will be developing in an agile methodology as I anticipate I will be adding additional features/updates to the game hence why I am choosing this approach.
 
-Finally, I will be using GitHub as my version control. When I finished developing a story, I ensured that the development was on a different branch to which I could then create a “pull request” (this does not apply when editing the documentation). Usually, another developer would review this code however due to the nature of this being an academic project, I reviewed my own code carefully - to see if I could spot other ways of improving. I also added descriptions on each pull request to allow the examiner to see what the “pull request” was trying to achieve.
-
+Finally, I will be using GitHub as my version control. When I have finished developing a story, I will ensure that the development was on a different branch and then create a “pull request”. Usually, another developer would review this code however due to the nature of this being an academic project, I will review my own code carefully - to see if I can spot other ways of improving. I can also add descriptions on each pull request to allow the examiner to see what the “pull request” was trying to achieve.
