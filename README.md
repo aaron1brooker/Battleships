@@ -16,3 +16,11 @@ The code will be written in Python due to its flexible nature compared to a stro
 I will be developing in an agile methodology as I anticipate I will be adding additional features/updates to the game hence why I am choosing this approach.
 
 Finally, I will be using GitHub as my version control. When I have finished developing a story, I will ensure that the development was on a different branch and then create a “pull request”. Usually, another developer would review this code however due to the nature of this being an academic project, I will review my own code carefully - to see if I can spot other ways of improving. I can also add descriptions on each pull request to allow the examiner to see what the “pull request” was trying to achieve.
+
+## Stage 1 - Logically setting up the grid and allowing for user input
+
+If you would like to understand more about this PR, please read the description:
+https://github.com/aaron1brooker/Battleships/pull/1
+
+I have also purposely not deleted the branch so for more insight on the code at this point look at:
+https://github.com/aaron1brooker/Battleships/tree/grid-foundations
