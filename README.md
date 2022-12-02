@@ -20,7 +20,16 @@ Finally, I will be using GitHub as my version control. When I have finished deve
 ## Stage 1 - Logically setting up the grid and allowing for user input
 
 If you would like to understand more about this PR, please read the description:
+
 https://github.com/aaron1brooker/Battleships/pull/1
 
 I have also purposely not deleted the branch so for more insight on the code at this point look at:
+
 https://github.com/aaron1brooker/Battleships/tree/grid-foundations
+
+The stories related to this stage:
+
+- Allow for the configuration file to be read and acted appropriately (e.g. setting variables to these values).
+- Users can input where they want their ships placed.
+- Print a grid to show where they are (Note: This needs to be very basic as we will advance it in the future of the project).
+
