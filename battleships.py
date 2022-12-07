@@ -6,7 +6,7 @@ from colorama import Fore
 from svc.game_setup import GameSetup
 from src.automated_grid import AutomatedGrid
 from src.player_grid import PlayerGrid
-from util.util import Util
+from util.util import GridUtil
 from util.exceptions import UserError
 
 # Logging output will be put into a txt file to help debugging
@@ -20,7 +20,11 @@ def start_game():
     try:
         game_config = GameSetup()
         board, boats = game_config.get_game_config()
+
+        # Intialise Players
         player = PlayerGrid(board["x"], board["y"], boats)
+        bot = AutomatedGrid(board["x"], board["y"], boats)
+        bot.auto_place_all()
     except UserError as e:
         print(e)
         print("Reconfigure configuration file and try again")
@@ -34,7 +38,7 @@ def start_game():
             f"{Fore.BLUE}\nEnter the boat, postion and direction. E.g. carrier E1 down: {Fore.WHITE}"
         )
         try:
-            boat, pos, direction = Util.seperate_choice(choice)
+            boat, pos, direction = GridUtil.seperate_choice(choice)
             if not player.place_boat(pos, boat, direction):
                 print(
                     f"{Fore.RED}It was not possible to position this boat. Please try again{Fore.WHITE}"
@@ -47,12 +51,14 @@ def start_game():
     os.system("clear")
     player.display_board()
 
+
 def test():
-	game_config = GameSetup()
-	board, boats = game_config.get_game_config()
-	player = AutomatedGrid(board["x"], board["y"], boats)
-	player.auto_place_all()
-	player.display_board()
+    game_config = GameSetup()
+    board, boats = game_config.get_game_config()
+    player = AutomatedGrid(board["x"], board["y"], boats)
+    player.auto_place_all()
+    player.display_board()
+
 
 test()
-#start_game()
+# start_game()

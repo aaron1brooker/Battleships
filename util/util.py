@@ -1,3 +1,4 @@
+import logging
 import re
 
 from typing import Tuple
@@ -5,7 +6,7 @@ from typing import Tuple
 from util.exceptions import UserError
 
 
-class Util:
+class GridUtil:
     """Holds all helper methods that are utilised through out the program"""
 
     # Static methods are used to help organise these methods
@@ -37,7 +38,23 @@ class Util:
         pos = ("".join(x_axis), int("".join(y_axis)))
 
         return choice_components[0], pos, choice_components[2]
-    
+
     @staticmethod
     def invert_dictionary(dictionary):
-        return dict((v,k) for k,v in dictionary.items())
+        return dict((v, k) for k, v in dictionary.items())
+
+    @staticmethod
+    def find_index(pos: Tuple[str, int], x_length: int, y_length: int) -> int:
+        x, y = pos
+        x_int = ord(x.upper()) - 65
+        y -= 1
+
+        if not 0 <= x_int < x_length:
+            logging.error(f"{x} is not a valid x value")
+            raise UserError("Not a valid x value")
+
+        if not 0 <= y < y_length:
+            logging.error(f"{y} is not a valid y value")
+            raise UserError("Not a valid y value")
+
+        return (y * y_length) + x_int
