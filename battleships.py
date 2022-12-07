@@ -4,6 +4,7 @@ import time
 from colorama import Fore
 
 from svc.game_setup import GameSetup
+from src.automated_grid import AutomatedGrid
 from src.player_grid import PlayerGrid
 from util.util import Util
 from util.exceptions import UserError
@@ -25,7 +26,7 @@ def start_game():
         print("Reconfigure configuration file and try again")
         return
 
-    while player.is_boats():
+    while player.boats_left():
         os.system("clear")  # clears the console so we can put the updated grid in
         player.display_board()
         player.display_remaining_boats()
@@ -46,5 +47,12 @@ def start_game():
     os.system("clear")
     player.display_board()
 
+def test():
+	game_config = GameSetup()
+	board, boats = game_config.get_game_config()
+	player = AutomatedGrid(board["x"], board["y"], boats)
+	player.auto_place_all()
+	player.display_board()
 
-start_game()
+test()
+#start_game()

@@ -37,3 +37,7 @@ class Util:
         pos = ("".join(x_axis), int("".join(y_axis)))
 
         return choice_components[0], pos, choice_components[2]
+    
+    @staticmethod
+    def invert_dictionary(dictionary):
+        return dict((v,k) for k,v in dictionary.items())

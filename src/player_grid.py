@@ -13,11 +13,16 @@ class PlayerGrid:
     def __init__(self, x_length: int, y_length: int, boats: Dict) -> None:
         """Constructor"""
 
+        # protected
+        self._player_boats = boats
+        self._guesses = []
+        self._x_length = x_length
+        
+        # private
         self.__grid = [0] * x_length * y_length
-        self.__x_length = x_length
         self.__y_length = y_length
-        self.__player_boats = boats
-
+    
+    
     def __insert_boat(
         self, pos: Tuple[str, int], boat_len: int, direction: int
     ) -> bool:
@@ -27,7 +32,7 @@ class PlayerGrid:
         x_int = ord(x.upper()) - 65
         y -= 1
 
-        if not 0 <= x_int < self.__x_length:
+        if not 0 <= x_int < self._x_length:
             logging.warning(f"{x} is not a valid x value")
             return False
 
@@ -47,7 +52,7 @@ class PlayerGrid:
             # 'direction_sum' determines how much it needs to move by to place the next 'part'
             # of the ship
             if direction == 1 or direction == 3:
-                direction_sum = -self.__x_length if direction == 1 else self.__x_length
+                direction_sum = -self._x_length if direction == 1 else self._x_length
                 # Check if it is within the grids dimensions
                 if positions[ii] + direction_sum < 0 or positions[
                     ii
@@ -57,7 +62,7 @@ class PlayerGrid:
             else:
                 # We cam safely assume that only direction 2 and 4 will be passed
                 direction_sum = 1 if direction == 2 else -1
-                furthest_right_index = index_row + self.__x_length - 1
+                furthest_right_index = index_row + self._x_length - 1
 
                 # Without this check it would go on to the previous/next grid row
                 if ((positions[ii] + direction_sum) > furthest_right_index) or (
@@ -84,7 +89,7 @@ class PlayerGrid:
         """Supplies and executes __insert_boat with boat data and validates direction"""
 
         direction = DIRECTION.get(direction.lower())
-        boat_len = self.__player_boats.get(boat.lower())
+        boat_len = self._player_boats.get(boat.lower())
 
         if not (direction and boat_len):
             logging.warning(
@@ -93,16 +98,17 @@ class PlayerGrid:
             return False
 
         if self.__insert_boat(pos, boat_len, direction):
-            self.__player_boats.pop(boat.lower())
+            self._player_boats.pop(boat.lower())
             return True
 
         # A warning message will have been provided by __insert_boat if it failed
         return False
 
-    def is_boats(self) -> bool:
+
+    def boats_left(self) -> bool:
         """Returns true if there are boats still left"""
 
-        if len(self.__player_boats) == 0:
+        if len(self._player_boats) == 0:
             return False
 
         return True
@@ -110,7 +116,7 @@ class PlayerGrid:
     def display_remaining_boats(self) -> None:
         """Prints the remaining boats to place onto the grid"""
 
-        for boat in self.__player_boats:
+        for boat in self._player_boats:
             print(Fore.WHITE + boat)
 
     def display_board(self) -> None:
@@ -120,7 +126,7 @@ class PlayerGrid:
 
         x_axis_label = []
         x_axis_label.append(f"{Util.add_spaces('', column_spacing)}|")
-        for ii in range(self.__x_length):
+        for ii in range(self._x_length):
             # Print x axis labels
             if ii + 65 > 90:
                 # For now, we do not allow columns greater than 26
@@ -139,7 +145,7 @@ class PlayerGrid:
         for y_label in range(self.__y_length):
             row_data = []
             row_data.append(f"{Util.add_spaces(str(y_label + 1), column_spacing)}|")
-            for ii in range(self.__x_length):
+            for ii in range(self._x_length):
                 row_data.append(str(self.__grid[pos]))
                 pos += 1
             print(" ".join(row_data))
