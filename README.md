@@ -33,3 +33,14 @@ The stories related to this stage:
 - Users can input where they want their ships placed.
 - Print a grid to show where they are (Note: This needs to be very basic as we will advance it in the future of the project).
 
+## Stage 2 - Basic game player vs computer
+
+If you would like to understand more about this PR, please read the description:
+
+https://github.com/aaron1brooker/Battleships/pull/2
+
+The stories related to this stage:
+- A simulated player can randomly place the boats correctly on the grid.
+- A simulated/real player can make guesses about where the real player's boats are.
+- A winner can be identified by an opponents boats all being destroyed.
+
