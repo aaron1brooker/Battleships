@@ -55,6 +55,8 @@ def setup_game():
 
 
 def play_game(player1, player2):
+    """An iterative function that allows for users to shoot oppositions boats"""
+
     os.system("cls")
     player1.display_board()
 
