@@ -1,4 +1,5 @@
 import logging
+import copy
 from colorama import Fore
 from typing import Dict, Tuple
 
@@ -14,8 +15,10 @@ class PlayerGrid:
         """Constructor - all protected members"""
 
         # Game Mechanics related
-        self._unplaced_boats = boats
-        self._placed_boats = []
+        self._unplaced_boats = copy.deepcopy(
+            boats
+        )  # so the boats are independant from other objects
+        self._placed_boats = {}
         self._guesses = []
 
         # Grid related
@@ -29,14 +32,14 @@ class PlayerGrid:
         """Inserts the boat into the grid and returns a status boolean if successful"""
 
         grid_index = GridUtil.find_index(pos, self._x_length, self._y_length)
-        if grid_index == 1:
+        if self._grid[grid_index] == 1:
             logging.warning(
                 "Cannot place boat. Position is occupied by an object already"
             )
             return False
 
         _, y = pos
-        index_row = y * self._y_length  # Furthest left value in row
+        index_row = (y - 1) * self._y_length  # Furthest left value in row
         positions = [grid_index]
 
         for ii in range(boat_len - 1):
@@ -47,7 +50,7 @@ class PlayerGrid:
                 # Check if it is within the grids dimensions
                 if positions[ii] + direction_sum < 0 or positions[
                     ii
-                ] + direction_sum > len(self._grid):
+                ] + direction_sum >= len(self._grid):
                     logging.warning("Out of the grids range")
                     return False
             else:
@@ -71,8 +74,13 @@ class PlayerGrid:
 
             positions.append(positions[ii] + direction_sum)
 
+        # Move boat to placed boats with the coordinates & change grid status
+        self._placed_boats[
+            boat_len
+        ] = []  # length of boat is unique so we can use it as a key
         for position in positions:
             self._grid[position] = 1
+            self._placed_boats[boat_len].append(position)
 
         return True
 
@@ -90,22 +98,39 @@ class PlayerGrid:
 
         if self.__insert_boat(pos, boat_len, direction):
             self._unplaced_boats.pop(boat.lower())
-            self._placed_boats.append(boat.lower())
             return True
 
         # A warning message will have been provided by __insert_boat if it failed
         return False
 
-    def shots_recieved(self, pos: Tuple[str, int]) -> bool:
+    def shots_recieved(self, pos: str) -> str:
         """Checks if an oppositions shot has hit the boat and actions accordingly"""
+        pos_tuple = GridUtil.position_to_tuple(pos)
 
-        grid_index = GridUtil.find_index(pos, self._x_length, self._y_length)
+        grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
+
+        # Check if this is a position of a boat
         if self._grid[grid_index] == 1:
-            return True
+            # No concerns with complexity here due to the fact that we are
+            # dealing with small values of n.
+            for boat in self._placed_boats:
+                for ii, position in enumerate(self._placed_boats[boat]):
+                    if position == grid_index:
+                        # position hit belongs to _placed_boats[boat]
+                        logging.info(ii)
+                        self._placed_boats[boat].pop(ii)
+                        # Check if the boat has sunk
+                        if len(self._placed_boats[boat]) == 0:
+                            self._placed_boats.pop(boat)
+                            # As we have sunk a boat, we want to check if there are still boats left
+                            if len(self._placed_boats) == 0:
+                                return "lost"
+                            return "sunk"
+                        return "hit"
 
-        return False
+        return "missed"
 
-    def boats_left(self) -> bool:
+    def unplaced_boats_left(self) -> bool:
         """Returns true if there are boats still left to be placed onto the grid"""
 
         if len(self._unplaced_boats) == 0:

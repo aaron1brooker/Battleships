@@ -15,7 +15,7 @@ class AutomatedGrid(PlayerGrid):
         has_placed = False
 
         while not has_placed:
-            rnd_x = chr(random.randint(65, 90))
+            rnd_x = chr(random.randint(65, 65 + self._x_length - 1))
             rnd_y = random.randint(1, self._x_length)
 
             if self.place_boat(
@@ -32,15 +32,15 @@ class AutomatedGrid(PlayerGrid):
         for boat in players_boats:
             self.auto_place_boat(boat)
 
-    def auto_guess(self) -> Tuple[str, int]:
+    def auto_guess(self) -> str:
         """Randomly makes a unique guess"""
 
-        rnd_x = chr(random.randint(65, 90))
+        rnd_x = chr(random.randint(65, 65 + self._x_length - 1))
         rnd_y = random.randint(1, self._x_length)
         guess_str = rnd_x + str(rnd_y)
 
         if guess_str not in self._guesses:
-            self._guesses(guess_str)
-            return rnd_x, rnd_y
+            self._guesses.append(guess_str)
+            return guess_str
 
         return self.auto_guess()
