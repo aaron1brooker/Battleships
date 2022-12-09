@@ -13,23 +13,6 @@ from util.exceptions import UserError
 logging.basicConfig(filename="logs.txt", level=logging.INFO)
 
 
-def x():
-    try:
-        game_config = GameSetup()
-        board, boats = game_config.get_game_config()
-
-        # Intialise Players
-        player = AutomatedGrid(board["x"], board["y"], boats)
-        bot = AutomatedGrid(board["x"], board["y"], boats)
-        bot.auto_place_all()
-        player.auto_place_all()
-        return player, bot
-    except UserError as e:
-        print(e)
-        print("Reconfigure configuration file and try again")
-        return
-
-
 def setup_game():
     """Setup the grid and position boats"""
 
@@ -111,7 +94,7 @@ def play_game(player1, player2):
 def start_game():
     """This will start battleships"""
 
-    player, bot = x()
+    player, bot = setup_game()
     play_game(player, bot)
 
 
