@@ -2,7 +2,7 @@ import random
 import copy
 from typing import Tuple
 
-from src.player_grid import PlayerGrid
+from src.grid_components.player_grid import PlayerGrid
 from util.constants import INVERT_DIRECTION
 
 

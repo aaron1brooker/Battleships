@@ -9,7 +9,7 @@ from util.util import GridUtil
 
 
 class PlayerGrid:
-    """Class that controls players actions and their grids"""
+    """Parent Class that controls players actions and their grids"""
 
     def __init__(self, x_length: int, y_length: int, boats: Dict) -> None:
         """Constructor - all protected members"""
