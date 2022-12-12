@@ -1,9 +1,11 @@
 import logging
 import re
 
+from colorama import Fore
 from typing import Tuple, List
 
 from util.exceptions import UserError
+from util.constants import LONGEST_BOAT_HEADER_LEN
 
 
 class GridUtil:
@@ -72,4 +74,50 @@ class GridUtil:
             raise UserError("Not a valid y value")
 
         return (y * y_length) + x_int
-    
+
+    @staticmethod
+    def structure_all_boats(
+        unplaced_boats: List[str], placed_boats: List[str]
+    ) -> List[str]:
+        """Structures the boats in a format so that they can be displayed"""
+
+        display_rows = [
+            Fore.GREEN
+            + GridUtil.add_spaces("Placed Boats:", LONGEST_BOAT_HEADER_LEN + 1)
+            + Fore.RED
+            + "Unplaced Boats:"
+        ]  # This is what the user will see
+        placed_boats_len = len(placed_boats)
+        unplaced_boats_len = len(unplaced_boats)
+
+        # Find out greater List & workout the difference
+        is_placed_greater = True if placed_boats_len > unplaced_boats_len else False
+        if is_placed_greater:
+            diff = placed_boats_len - unplaced_boats_len
+        else:
+            diff = unplaced_boats_len - placed_boats_len
+
+        # Place populated values side by side
+        for ii in range(unplaced_boats_len if is_placed_greater else placed_boats_len):
+            display_row = Fore.GREEN + GridUtil.add_spaces(
+                placed_boats[ii], LONGEST_BOAT_HEADER_LEN + 1
+            )
+            display_row += Fore.RED + unplaced_boats[ii]
+
+            display_rows.append(display_row)
+
+        # Place the rest of the boats next to an empty string
+        if is_placed_greater:
+            for ii in range(placed_boats_len - diff, placed_boats_len):
+                display_rows.append(
+                    Fore.GREEN
+                    + GridUtil.add_spaces(placed_boats[ii], LONGEST_BOAT_HEADER_LEN + 1)
+                )
+            return display_rows
+
+        for ii in range(unplaced_boats_len - diff, unplaced_boats_len):
+            display_row = GridUtil.add_spaces("", LONGEST_BOAT_HEADER_LEN + 1)
+            display_row += Fore.RED + unplaced_boats[ii]
+
+            display_rows.append(display_row)
+        return display_rows

@@ -18,31 +18,45 @@ class Traditional_Battleships:
 
         # place boats for the computer
         self.__bot.auto_place_all()
-        
+
     def __player_place_boats(self) -> None:
         """Where the player can place their boats on the grid"""
 
-        while self.__player.unplaced_boats_left():
-            os.system("cls")  # clears the console so we can put the updated grid in
-            self.__player.display_board()
-            self.__player.display_remaining_boats()
-            choice = input(
-                f"{Fore.BLUE}\nEnter the boat, postion and direction. E.g. carrier E1 down: {Fore.WHITE}"
-            )
-            try:
-                boat, pos, direction = GridUtil.seperate_choice(choice)
-                if not self.__player.place_boat(pos, boat, direction):
-                    print(
-                        f"{Fore.RED}It was not possible to position this boat. Please try again{Fore.WHITE}"
-                    )
-                    time.sleep(1.5)
-            except UserError as e:
-                print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
+        os.system("cls")  # clears the console so we can put the updated grid in
+        self.__player.display_board()
+        self.__player.display_remaining_boats()
+        choice = input(
+            f"{Fore.BLUE}\nEnter the boat, postion and direction. E.g. carrier E1 down: {Fore.WHITE}"
+        )
+
+        # continue will exit the recursive function and move onto the game
+        if choice == "continue":
+            if self.__player.unplaced_boats_left():
+                print(f"{Fore.BLUE}Placing remaining boats...{Fore.WHITE}")
+                self.__player.auto_place_all()
                 time.sleep(1.5)
 
-        print(f"{Fore.GREEN}All boats have been placed... Lets play!{Fore.WHITE}")
-        time.sleep(1.5)
-    
+            os.system("cls")
+            self.__player.display_board()
+            print(
+                f"{Fore.GREEN}Boat positions are now locked in... Lets play!{Fore.WHITE}"
+            )
+            time.sleep(1.5)
+            return
+
+        try:
+            boat, pos, direction = GridUtil.seperate_choice(choice)
+            if not self.__player.place_boat(pos, boat, direction):
+                print(
+                    f"{Fore.RED}It was not possible to position this boat. Please try again{Fore.WHITE}"
+                )
+                time.sleep(1.5)
+        except UserError as e:
+            print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
+            time.sleep(1.5)
+
+        self.__player_place_boats()
+
     def __players_attack(self) -> None:
         """Where both player and computer choose a position to try to hit their opponent"""
 
@@ -72,13 +86,12 @@ class Traditional_Battleships:
 
             # recursive until bot or player wins
             self.__players_attack()
-        
+
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
             self.__players_attack()
-    
-    
+
     def play_game(self) -> None:
         """Starts the Game"""
 

@@ -1,6 +1,5 @@
 import logging
 import copy
-from colorama import Fore
 from typing import Dict, Tuple
 
 from util.constants import DIRECTION
@@ -12,7 +11,7 @@ class PlayerGrid:
     """Parent Class that controls players actions and their grids"""
 
     def __init__(self, x_length: int, y_length: int, boats: Dict) -> None:
-        """Constructor - all protected members"""
+        """Constructor"""
 
         # Game Mechanics related
         self._unplaced_boats = copy.deepcopy(
@@ -26,10 +25,13 @@ class PlayerGrid:
         self._y_length = y_length
         self._grid = [0] * x_length * y_length
 
-    def __insert_boat(
-        self, pos: Tuple[str, int], boat_len: int, direction: int
-    ) -> bool:
+        # Generated Constants
+        self._boat_to_length = boats
+
+    def __insert_boat(self, pos: Tuple[str, int], boat: str, direction: int) -> bool:
         """Inserts the boat into the grid and returns a status boolean if successful"""
+
+        boat_len = self._boat_to_length[boat]
 
         grid_index = GridUtil.find_index(pos, self._x_length, self._y_length)
         if self._grid[grid_index] == 1:
@@ -75,20 +77,27 @@ class PlayerGrid:
             positions.append(positions[ii] + direction_sum)
 
         # Move boat to placed boats with the coordinates & change grid status
+        # Also need to check if it is already there, if so revert old coords to 0
+
+        if boat in self._placed_boats:
+            for position in self._placed_boats[boat]:
+                self._grid[position] = 0
+
         self._placed_boats[
-            boat_len
+            boat
         ] = []  # length of boat is unique so we can use it as a key
         for position in positions:
             self._grid[position] = 1
-            self._placed_boats[boat_len].append(position)
+            self._placed_boats[boat].append(position)
 
         return True
 
     def place_boat(self, pos: Tuple[str, int], boat: str, direction: str) -> bool:
         """Supplies and executes __insert_boat with boat data and validates direction"""
 
+        boat = boat.lower()
         direction = DIRECTION.get(direction.lower())
-        boat_len = self._unplaced_boats.get(boat.lower())
+        boat_len = self._boat_to_length.get(boat)
 
         if not (direction and boat_len):
             logging.warning(
@@ -96,8 +105,9 @@ class PlayerGrid:
             )
             return False
 
-        if self.__insert_boat(pos, boat_len, direction):
-            self._unplaced_boats.pop(boat.lower())
+        if self.__insert_boat(pos, boat, direction):
+            if boat in self._unplaced_boats:
+                self._unplaced_boats.pop(boat)
             return True
 
         # A warning message will have been provided by __insert_boat if it failed
@@ -117,7 +127,6 @@ class PlayerGrid:
                 for ii, position in enumerate(self._placed_boats[boat]):
                     if position == grid_index:
                         # position hit belongs to _placed_boats[boat]
-                        logging.info(ii)
                         self._placed_boats[boat].pop(ii)
                         # Check if the boat has sunk
                         if len(self._placed_boats[boat]) == 0:
@@ -141,8 +150,15 @@ class PlayerGrid:
     def display_remaining_boats(self) -> None:
         """Prints the remaining boats to place onto the grid"""
 
-        for boat in self._unplaced_boats:
-            print(Fore.WHITE + boat)
+        placed_boats_list = [boat for boat in self._placed_boats]
+        unplaced_boats_list = [boat for boat in self._unplaced_boats]
+
+        display_rows = GridUtil.structure_all_boats(
+            unplaced_boats_list, placed_boats_list
+        )
+
+        for rows in display_rows:
+            print(rows)
 
     def display_board(self) -> None:
         """Prints the board in its current state"""

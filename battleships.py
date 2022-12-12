@@ -10,6 +10,7 @@ from src.games.traditional_battleships import Traditional_Battleships
 # Logging output will be put into a txt file to help debugging
 logging.basicConfig(filename="logs.txt", level=logging.INFO)
 
+
 class Battleships:
     """Main class that holds/executes the different games"""
 
@@ -19,7 +20,7 @@ class Battleships:
         # fetch config data
         game_config = GameSetup()
         self.__board, self.__boats = game_config.get_game_config()
-    
+
     def __battleships(self):
         """Play Battleships (real player vs computer)"""
 
@@ -33,7 +34,7 @@ class Battleships:
 
     def menu(self):
         """Allows the user to choose the game to play"""
-        
+
         os.system("cls")
 
         menu_screen = f"{Fore.GREEN}Menu:\n1) Battleships\n2) Quit{Fore.WHITE}\n"
@@ -58,5 +59,6 @@ def main():
     except Exception as e:
         print(e)
         print("Ensure that the configuration file is correct and try again")
+
 
 main()
