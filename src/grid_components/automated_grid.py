@@ -33,7 +33,6 @@ class AutomatedGrid(PlayerGrid):
 
         for boat in players_boats:
             self.__auto_place_boat(boat)
-        input(self._placed_boats)
 
     def auto_guess(self) -> str:
         """Randomly makes a unique guess"""

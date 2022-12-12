@@ -5,6 +5,7 @@ from colorama import Fore
 from src.grid_components.automated_grid import AutomatedGrid
 from util.util import GridUtil
 from util.exceptions import UserError
+from util.constants import POSITIONING_HELP_MSG
 
 
 class Traditional_Battleships:
@@ -27,10 +28,10 @@ class Traditional_Battleships:
         self.__player.display_remaining_boats()
         choice = input(
             f"{Fore.BLUE}\nEnter the boat, postion and direction. E.g. carrier E1 down: {Fore.WHITE}"
-        )
+        ).lower()
 
-        # continue will exit the recursive function and move onto the game
         if choice == "continue":
+            # continue will exit the recursive function and move onto the game
             if self.__player.unplaced_boats_left():
                 print(f"{Fore.BLUE}Placing remaining boats...{Fore.WHITE}")
                 self.__player.auto_place_all()
@@ -44,7 +45,14 @@ class Traditional_Battleships:
             time.sleep(1.5)
             return
 
+        elif choice == "help":
+            # Allows the user to look at the instructions again
+            os.system("cls")
+            input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
+            self.__player_place_boats()
+
         try:
+            # try to place the boat
             boat, pos, direction = GridUtil.seperate_choice(choice)
             if not self.__player.place_boat(pos, boat, direction):
                 print(
@@ -52,6 +60,7 @@ class Traditional_Battleships:
                 )
                 time.sleep(1.5)
         except UserError as e:
+            # Not a valid response has been given by the user
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
 
@@ -94,6 +103,9 @@ class Traditional_Battleships:
 
     def play_game(self) -> None:
         """Starts the Game"""
+
+        os.system("cls")
+        input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
 
         self.__player_place_boats()
         self.__players_attack()

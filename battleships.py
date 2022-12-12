@@ -37,14 +37,14 @@ class Battleships:
 
         os.system("cls")
 
-        menu_screen = f"{Fore.GREEN}Menu:\n1) Battleships\n2) Quit{Fore.WHITE}\n"
+        menu_screen = f"{Fore.BLUE}Menu:\n1) Battleships\n2) Quit{Fore.WHITE}\n"
         user_choice = input(menu_screen)
 
         if user_choice == "1":
             self.__battleships()
             return
         elif user_choice == "2":
-            print(f"{Fore.GREEN}Goodbye!!{Fore.WHITE}")
+            print(f"{Fore.BLUE}Goodbye!!{Fore.WHITE}")
             return
         else:
             print(f"{Fore.RED}Not a valid choice. Try again")
