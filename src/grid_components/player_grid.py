@@ -9,27 +9,31 @@ from util.util import GridUtil
 
 
 class PlayerGrid:
-    """Class that controls players actions and their grids"""
+    """Parent Class that controls players actions and their grids"""
 
     def __init__(self, x_length: int, y_length: int, boats: Dict) -> None:
-        """Constructor - all protected members"""
+        """Constructor"""
 
-        # Game Mechanics related
+        # Boats related
         self._unplaced_boats = copy.deepcopy(
             boats
         )  # so the boats are independant from other objects
         self._placed_boats = {}
-        self._guesses = []
+        self._boat_to_length = boats
 
         # Grid related
         self._x_length = x_length
         self._y_length = y_length
         self._grid = [0] * x_length * y_length
 
-    def __insert_boat(
-        self, pos: Tuple[str, int], boat_len: int, direction: int
-    ) -> bool:
+        # Guessing mechanics related
+        self._guesses = []
+        self._guesses_grid = [0] * x_length * y_length
+
+    def __insert_boat(self, pos: Tuple[str, int], boat: str, direction: int) -> bool:
         """Inserts the boat into the grid and returns a status boolean if successful"""
+
+        boat_len = self._boat_to_length[boat]
 
         grid_index = GridUtil.find_index(pos, self._x_length, self._y_length)
         if self._grid[grid_index] == 1:
@@ -75,20 +79,27 @@ class PlayerGrid:
             positions.append(positions[ii] + direction_sum)
 
         # Move boat to placed boats with the coordinates & change grid status
+        # Also need to check if it is already there, if so revert old coords to 0
+
+        if boat in self._placed_boats:
+            for position in self._placed_boats[boat]:
+                self._grid[position] = 0
+
         self._placed_boats[
-            boat_len
+            boat
         ] = []  # length of boat is unique so we can use it as a key
         for position in positions:
             self._grid[position] = 1
-            self._placed_boats[boat_len].append(position)
+            self._placed_boats[boat].append(position)
 
         return True
 
     def place_boat(self, pos: Tuple[str, int], boat: str, direction: str) -> bool:
         """Supplies and executes __insert_boat with boat data and validates direction"""
 
+        boat = boat.lower()
         direction = DIRECTION.get(direction.lower())
-        boat_len = self._unplaced_boats.get(boat.lower())
+        boat_len = self._boat_to_length.get(boat)
 
         if not (direction and boat_len):
             logging.warning(
@@ -96,17 +107,18 @@ class PlayerGrid:
             )
             return False
 
-        if self.__insert_boat(pos, boat_len, direction):
-            self._unplaced_boats.pop(boat.lower())
+        if self.__insert_boat(pos, boat, direction):
+            if boat in self._unplaced_boats:
+                self._unplaced_boats.pop(boat)
             return True
 
         # A warning message will have been provided by __insert_boat if it failed
         return False
 
-    def shots_recieved(self, pos: str) -> str:
+    def shot_recieved(self, pos: str) -> str:
         """Checks if an oppositions shot has hit the boat and actions accordingly"""
-        pos_tuple = GridUtil.position_to_tuple(pos)
 
+        pos_tuple = GridUtil.position_to_tuple(pos)
         grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
 
         # Check if this is a position of a boat
@@ -117,7 +129,6 @@ class PlayerGrid:
                 for ii, position in enumerate(self._placed_boats[boat]):
                     if position == grid_index:
                         # position hit belongs to _placed_boats[boat]
-                        logging.info(ii)
                         self._placed_boats[boat].pop(ii)
                         # Check if the boat has sunk
                         if len(self._placed_boats[boat]) == 0:
@@ -130,6 +141,18 @@ class PlayerGrid:
 
         return "missed"
 
+    def shot_sent(self, pos: str, status: str, player: int) -> None:
+        """Allows the user to track their guesses"""
+
+        pos_tuple = GridUtil.position_to_tuple(pos)
+        grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
+        if status == "missed":
+            self._guesses_grid[grid_index] = "x"
+        else:
+            self._guesses_grid[grid_index] = 1
+
+        self.display_board(True, player)
+
     def unplaced_boats_left(self) -> bool:
         """Returns true if there are boats still left to be placed onto the grid"""
 
@@ -141,11 +164,25 @@ class PlayerGrid:
     def display_remaining_boats(self) -> None:
         """Prints the remaining boats to place onto the grid"""
 
-        for boat in self._unplaced_boats:
-            print(Fore.WHITE + boat)
+        placed_boats_list = [boat for boat in self._placed_boats]
+        unplaced_boats_list = [boat for boat in self._unplaced_boats]
 
-    def display_board(self) -> None:
+        display_rows = GridUtil.structure_all_boats(
+            unplaced_boats_list, placed_boats_list
+        )
+
+        for rows in display_rows:
+            print(rows)
+
+    def display_board(self, is_guess_board: bool, player: int) -> None:
         """Prints the board in its current state"""
+
+        if is_guess_board:
+            print(f"{Fore.BLUE}PLAYER {player} GUESSES:{Fore.WHITE}\n")
+            board = self._guesses_grid
+        else:
+            print(f"{Fore.BLUE}PLAYER {player} POSITIONED BOATS:{Fore.WHITE}\n")
+            board = self._grid
 
         column_spacing = len(str(self._y_length)) + 1
 
@@ -171,6 +208,19 @@ class PlayerGrid:
             row_data = []
             row_data.append(f"{GridUtil.add_spaces(str(y_label + 1), column_spacing)}|")
             for ii in range(self._x_length):
-                row_data.append(str(self._grid[pos]))
+                if is_guess_board:
+                    if board[pos] == 1:
+                        colour = Fore.GREEN if player == 1 else Fore.RED
+                        row_data.append(colour + str(board[pos]) + Fore.WHITE)
+                    elif board[pos] == "x":
+                        row_data.append(Fore.BLACK + board[pos] + Fore.WHITE)
+                    else:
+                        row_data.append(str(board[pos]))
+                else:
+                    if board[pos] == 1:
+                        row_data.append(Fore.GREEN + str(board[pos]) + Fore.WHITE)
+                    else:
+                        row_data.append(str(board[pos]))
                 pos += 1
+
             print(" ".join(row_data))
