@@ -146,10 +146,10 @@ class PlayerGrid:
 
         pos_tuple = GridUtil.position_to_tuple(pos)
         grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
-        if status == "hit" or status == "sunk":
-            self._guesses_grid[grid_index] = 1
-        else:
+        if status == "missed":
             self._guesses_grid[grid_index] = "x"
+        else:
+            self._guesses_grid[grid_index] = 1
 
         self.display_board(True, player)
 
