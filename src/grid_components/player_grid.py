@@ -1,5 +1,6 @@
 import logging
 import copy
+from colorama import Fore
 from typing import Dict, Tuple
 
 from util.constants import DIRECTION
@@ -13,20 +14,21 @@ class PlayerGrid:
     def __init__(self, x_length: int, y_length: int, boats: Dict) -> None:
         """Constructor"""
 
-        # Game Mechanics related
+        # Boats related
         self._unplaced_boats = copy.deepcopy(
             boats
         )  # so the boats are independant from other objects
         self._placed_boats = {}
-        self._guesses = []
+        self._boat_to_length = boats
 
         # Grid related
         self._x_length = x_length
         self._y_length = y_length
         self._grid = [0] * x_length * y_length
 
-        # Generated Constants
-        self._boat_to_length = boats
+        # Guessing mechanics related
+        self._guesses = []
+        self._guesses_grid = [0] * x_length * y_length
 
     def __insert_boat(self, pos: Tuple[str, int], boat: str, direction: int) -> bool:
         """Inserts the boat into the grid and returns a status boolean if successful"""
@@ -113,10 +115,10 @@ class PlayerGrid:
         # A warning message will have been provided by __insert_boat if it failed
         return False
 
-    def shots_recieved(self, pos: str) -> str:
+    def shot_recieved(self, pos: str) -> str:
         """Checks if an oppositions shot has hit the boat and actions accordingly"""
-        pos_tuple = GridUtil.position_to_tuple(pos)
 
+        pos_tuple = GridUtil.position_to_tuple(pos)
         grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
 
         # Check if this is a position of a boat
@@ -139,6 +141,18 @@ class PlayerGrid:
 
         return "missed"
 
+    def shot_sent(self, pos: str, status: str) -> None:
+        """Allows the user to track their guesses"""
+
+        pos_tuple = GridUtil.position_to_tuple(pos)
+        grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
+        if status == "hit" or status == "sunk":
+            self._guesses_grid[grid_index] = 2
+        else:
+            self._guesses_grid[grid_index] = 1
+
+        self.display_board(True)
+
     def unplaced_boats_left(self) -> bool:
         """Returns true if there are boats still left to be placed onto the grid"""
 
@@ -160,8 +174,15 @@ class PlayerGrid:
         for rows in display_rows:
             print(rows)
 
-    def display_board(self) -> None:
+    def display_board(self, is_guess_board: bool) -> None:
         """Prints the board in its current state"""
+
+        if is_guess_board:
+            print(f"{Fore.BLUE}YOUR GUESSES:{Fore.WHITE}\n")
+            board = self._guesses_grid
+        else:
+            print(f"{Fore.BLUE}YOUR POSITIONED BOATS:{Fore.WHITE}\n")
+            board = self._grid
 
         column_spacing = len(str(self._y_length)) + 1
 
@@ -187,6 +208,9 @@ class PlayerGrid:
             row_data = []
             row_data.append(f"{GridUtil.add_spaces(str(y_label + 1), column_spacing)}|")
             for ii in range(self._x_length):
-                row_data.append(str(self._grid[pos]))
+                if board[pos] == 1:
+                    row_data.append(Fore.GREEN + str(board[pos]) + Fore.WHITE)
+                else:
+                    row_data.append(str(board[pos]))
                 pos += 1
             print(" ".join(row_data))

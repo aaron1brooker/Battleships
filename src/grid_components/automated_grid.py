@@ -13,7 +13,7 @@ class AutomatedGrid(PlayerGrid):
         DIRECTION
     )  # Makes directions key the value in the new map
 
-    def __auto_place_boat(self, boat: str):
+    def __auto_place_boat(self, boat: str) -> None:
         """Generates a random position and direction to place a specified boat"""
 
         rnd_x = chr(random.randint(65, 65 + self._x_length - 1))
@@ -24,7 +24,7 @@ class AutomatedGrid(PlayerGrid):
         ):
             self.__auto_place_boat(boat)
 
-    def auto_place_all(self):
+    def auto_place_all(self) -> None:
         """Places all boats automatically"""
 
         players_boats = copy.deepcopy(
@@ -34,6 +34,12 @@ class AutomatedGrid(PlayerGrid):
         for boat in players_boats:
             self.__auto_place_boat(boat)
 
+    def is_guess_repeated(self, guess: str) -> bool:
+        if guess not in self._guesses:
+            self._guesses.append(guess)
+            return False
+        return True
+
     def auto_guess(self) -> str:
         """Randomly makes a unique guess"""
 
@@ -41,8 +47,7 @@ class AutomatedGrid(PlayerGrid):
         rnd_y = random.randint(1, self._x_length)
         guess_str = rnd_x + str(rnd_y)
 
-        if guess_str not in self._guesses:
-            self._guesses.append(guess_str)
+        if not self.is_guess_repeated(guess_str):
             return guess_str
 
         return self.auto_guess()

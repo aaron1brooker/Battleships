@@ -8,7 +8,7 @@ from util.exceptions import UserError
 from util.constants import POSITIONING_HELP_MSG
 
 
-class Traditional_Battleships:
+class TraditionalBattleships:
     """Traditional Game Player Vs Computer"""
 
     def __init__(self, player: AutomatedGrid, bot: AutomatedGrid) -> None:
@@ -24,21 +24,21 @@ class Traditional_Battleships:
         """Where the player can place their boats on the grid"""
 
         os.system("cls")  # clears the console so we can put the updated grid in
-        self.__player.display_board()
+        self.__player.display_board(False)
         self.__player.display_remaining_boats()
         choice = input(
-            f"{Fore.BLUE}\nEnter the boat, postion and direction. E.g. carrier E1 down: {Fore.WHITE}"
+            f"{Fore.BLUE}\nEnter the boat, postion and direction or type help for a list of commands: {Fore.WHITE}"
         ).lower()
 
         if choice == "continue":
             # continue will exit the recursive function and move onto the game
             if self.__player.unplaced_boats_left():
-                print(f"{Fore.BLUE}Placing remaining boats...{Fore.WHITE}")
+                print(f"{Fore.BLUE}Placing all remaining boats...{Fore.WHITE}")
                 self.__player.auto_place_all()
-                time.sleep(1.5)
+                time.sleep(2)
 
             os.system("cls")
-            self.__player.display_board()
+            self.__player.display_board(False)
             print(
                 f"{Fore.GREEN}Boat positions are now locked in... Lets play!{Fore.WHITE}"
             )
@@ -50,6 +50,15 @@ class Traditional_Battleships:
             os.system("cls")
             input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
             self.__player_place_boats()
+            return
+
+        elif choice == "auto":
+            # Allows the user to auto place all unplaced boats
+            print(f"{Fore.BLUE}Placing remaining boats...{Fore.WHITE}")
+            self.__player.auto_place_all()
+            time.sleep(1.5)
+            self.__player_place_boats()
+            return
 
         try:
             # try to place the boat
@@ -71,10 +80,19 @@ class Traditional_Battleships:
 
         try:
             # players turn - unique guess required
+            os.system("cls")
+            self.__bot.display_board(False)
+            self.__player.display_board(True)
             choice = input(
                 f"{Fore.BLUE}\nEnter a position to try to shoot your opponents ship: {Fore.WHITE}"
             )
-            outcome = self.__bot.shots_recieved(choice)
+            if self.__player.is_guess_repeated(choice):
+                raise UserError("This guess has already been made")
+
+            outcome = self.__bot.shot_recieved(choice)
+
+            os.system("cls")
+            self.__player.shot_sent(choice, outcome)
             if outcome == "lost":
                 print(f"{Fore.GREEN}Player 1 wins the game!!!{Fore.WHITE}")
                 return
@@ -86,7 +104,7 @@ class Traditional_Battleships:
             choice = self.__bot.auto_guess()
             print(f"{Fore.BLUE}\nBOTS turn... It chose {choice}{Fore.WHITE}")
             time.sleep(1.5)
-            outcome = self.__player.shots_recieved(choice)
+            outcome = self.__player.shot_recieved(choice)
             if outcome == "lost":
                 print(f"{Fore.GREEN}Bot wins the game!!!{Fore.WHITE}")
                 return
@@ -108,4 +126,5 @@ class Traditional_Battleships:
         input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
 
         self.__player_place_boats()
+        os.system("cls")
         self.__players_attack()

@@ -5,7 +5,7 @@ from colorama import Fore
 
 from svc.game_setup import GameSetup
 from src.grid_components.automated_grid import AutomatedGrid
-from src.games.traditional_battleships import Traditional_Battleships
+from src.games.traditional_battleships import TraditionalBattleships
 
 # Logging output will be put into a txt file to help debugging
 logging.basicConfig(filename="logs.txt", level=logging.INFO)
@@ -29,7 +29,7 @@ class Battleships:
         player2 = AutomatedGrid(self.__board["x"], self.__board["y"], self.__boats)
 
         # Play the game
-        battleships = Traditional_Battleships(player1, player2)
+        battleships = TraditionalBattleships(player1, player2)
         battleships.play_game()
 
     def menu(self):
@@ -37,7 +37,7 @@ class Battleships:
 
         os.system("cls")
 
-        menu_screen = f"{Fore.BLUE}Menu:\n1) Battleships\n2) Quit{Fore.WHITE}\n"
+        menu_screen = f"{Fore.BLUE}MENU:\n{Fore.WHITE}1) Battleships\n2) Quit\n"
         user_choice = input(menu_screen)
 
         if user_choice == "1":
