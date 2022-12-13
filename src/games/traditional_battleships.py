@@ -24,7 +24,7 @@ class TraditionalBattleships:
         """Where the player can place their boats on the grid"""
 
         os.system("cls")  # clears the console so we can put the updated grid in
-        self.__player.display_board(False)
+        self.__player.display_board(False, 1)
         self.__player.display_remaining_boats()
         choice = input(
             f"{Fore.BLUE}\nEnter the boat, postion and direction or type help for a list of commands: {Fore.WHITE}"
@@ -38,11 +38,11 @@ class TraditionalBattleships:
                 time.sleep(2)
 
             os.system("cls")
-            self.__player.display_board(False)
+            self.__player.display_board(False, 1)
             print(
                 f"{Fore.GREEN}Boat positions are now locked in... Lets play!{Fore.WHITE}"
             )
-            time.sleep(1.5)
+            input("Press enter to start the game...")
             return
 
         elif choice == "help":
@@ -81,35 +81,52 @@ class TraditionalBattleships:
         try:
             # players turn - unique guess required
             os.system("cls")
-            self.__bot.display_board(False)
-            self.__player.display_board(True)
+            self.__player.display_board(True, 1)
             choice = input(
                 f"{Fore.BLUE}\nEnter a position to try to shoot your opponents ship: {Fore.WHITE}"
-            )
+            ).lower()
+            # Check if the choice is repeated
             if self.__player.is_guess_repeated(choice):
                 raise UserError("This guess has already been made")
 
-            outcome = self.__bot.shot_recieved(choice)
+            if choice == "quit":
+                print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
+                return
+            elif choice == "reset":
+                print(f"{Fore.GREEN}RESETTING GAME{Fore.WHITE}")
+                self.__bot.reset_grid()
+                self.__player.reset_grid()
+                time.sleep(1.5)
+                self.play_game()
+                return
 
+            # Go to the bots grid to see if it hit, missed or sunk a boat
+            outcome = self.__bot.shot_recieved(choice)
             os.system("cls")
-            self.__player.shot_sent(choice, outcome)
+            # update players guess grid
+            self.__player.shot_sent(choice, outcome, 1)
             if outcome == "lost":
                 print(f"{Fore.GREEN}Player 1 wins the game!!!{Fore.WHITE}")
                 return
-            print(outcome)
-            time.sleep(1.5)
-            os.system("cls")
+            print(f"{Fore.BLUE}{outcome}!{Fore.WHITE}")
+            input("Press enter to start the BOTS turn...")
 
             # bots turn
+            os.system("cls")
+            self.__bot.display_board(True, 2)
+            # auto guess will be unique to the bots guesses
             choice = self.__bot.auto_guess()
-            print(f"{Fore.BLUE}\nBOTS turn... It chose {choice}{Fore.WHITE}")
-            time.sleep(1.5)
             outcome = self.__player.shot_recieved(choice)
+            os.system("cls")
+            # update bots guess grid
+            self.__bot.shot_sent(choice, outcome, 2)
             if outcome == "lost":
                 print(f"{Fore.GREEN}Bot wins the game!!!{Fore.WHITE}")
                 return
-            print(outcome)
-            time.sleep(1.5)
+            print(f"{Fore.BLUE}\nBOTS turn... It chose {choice} and it...{Fore.WHITE}")
+            time.sleep(1)
+            print(f"{Fore.BLUE}{outcome}!{Fore.WHITE}")
+            input("Press enter to start your turn again...")
 
             # recursive until bot or player wins
             self.__players_attack()

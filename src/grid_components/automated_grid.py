@@ -51,3 +51,14 @@ class AutomatedGrid(PlayerGrid):
             return guess_str
 
         return self.auto_guess()
+
+    def reset_grid(self) -> None:
+        """This reverts the grid back to its default"""
+
+        # Grab constructor parameters that have not been changed
+        x_length = self._x_length
+        y_length = self._y_length
+        boats = self._boat_to_length
+
+        # Re-construct grid
+        self.__init__(x_length, y_length, boats)

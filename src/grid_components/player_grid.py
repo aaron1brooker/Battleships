@@ -141,17 +141,17 @@ class PlayerGrid:
 
         return "missed"
 
-    def shot_sent(self, pos: str, status: str) -> None:
+    def shot_sent(self, pos: str, status: str, player: int) -> None:
         """Allows the user to track their guesses"""
 
         pos_tuple = GridUtil.position_to_tuple(pos)
         grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
         if status == "hit" or status == "sunk":
-            self._guesses_grid[grid_index] = 2
-        else:
             self._guesses_grid[grid_index] = 1
+        else:
+            self._guesses_grid[grid_index] = "x"
 
-        self.display_board(True)
+        self.display_board(True, player)
 
     def unplaced_boats_left(self) -> bool:
         """Returns true if there are boats still left to be placed onto the grid"""
@@ -174,14 +174,14 @@ class PlayerGrid:
         for rows in display_rows:
             print(rows)
 
-    def display_board(self, is_guess_board: bool) -> None:
+    def display_board(self, is_guess_board: bool, player: int) -> None:
         """Prints the board in its current state"""
 
         if is_guess_board:
-            print(f"{Fore.BLUE}YOUR GUESSES:{Fore.WHITE}\n")
+            print(f"{Fore.BLUE}PLAYER {player} GUESSES:{Fore.WHITE}\n")
             board = self._guesses_grid
         else:
-            print(f"{Fore.BLUE}YOUR POSITIONED BOATS:{Fore.WHITE}\n")
+            print(f"{Fore.BLUE}PLAYER {player} POSITIONED BOATS:{Fore.WHITE}\n")
             board = self._grid
 
         column_spacing = len(str(self._y_length)) + 1
@@ -208,9 +208,19 @@ class PlayerGrid:
             row_data = []
             row_data.append(f"{GridUtil.add_spaces(str(y_label + 1), column_spacing)}|")
             for ii in range(self._x_length):
-                if board[pos] == 1:
-                    row_data.append(Fore.GREEN + str(board[pos]) + Fore.WHITE)
+                if is_guess_board:
+                    if board[pos] == 1:
+                        colour = Fore.GREEN if player == 1 else Fore.RED
+                        row_data.append(colour + str(board[pos]) + Fore.WHITE)
+                    elif board[pos] == "x":
+                        row_data.append(Fore.BLACK + board[pos] + Fore.WHITE)
+                    else:
+                        row_data.append(str(board[pos]))
                 else:
-                    row_data.append(str(board[pos]))
+                    if board[pos] == 1:
+                        row_data.append(Fore.GREEN + str(board[pos]) + Fore.WHITE)
+                    else:
+                        row_data.append(str(board[pos]))
                 pos += 1
+
             print(" ".join(row_data))
