@@ -39,8 +39,31 @@ If you would like to understand more about this PR, please read the description:
 
 https://github.com/aaron1brooker/Battleships/pull/2
 
+I have also purposely not deleted the branch so for more insight on the code at this point look at:
+
+https://github.com/aaron1brooker/Battleships/tree/basic-game-computer
+
 The stories related to this stage:
 - A simulated player can randomly place the boats correctly on the grid.
 - A simulated/real player can make guesses about where the real player's boats are.
 - A winner can be identified by an opponents boats all being destroyed.
+
+## Stage 3 - MVP/Alpha Release
+
+If you would like to understand more about this PR, please read the description:
+
+https://github.com/aaron1brooker/Battleships/pull/3
+
+I have also purposely not deleted the branch so for more insight on the code at this point look at:
+
+https://github.com/aaron1brooker/Battleships/tree/alpha-game
+
+The stories related to this stage:
+- Create a Menu for the user to either choose quit or play game.
+- Allow for real user to place unplaced and placed ships until user inputs continue
+- Allow real user to auto place one or all ships.
+- Give the user the option to move on from placing their ships as well as an option to look at the placing rules.
+- Provide the user a grid for their guesses and show where they have hit or missed a boat.
+- Allow the user to reset or quit the game at any time.
+
 
