@@ -9,7 +9,7 @@ from util.constants import POSITIONING_HELP_MSG
 
 
 class TraditionalBattleships:
-    """Traditional Game Player Vs Computer"""
+    """Traditional Battleships Player Vs Computer"""
 
     def __init__(self, player: AutomatedGrid, bot: AutomatedGrid) -> None:
         """Constructor"""
@@ -20,7 +20,7 @@ class TraditionalBattleships:
         # place boats for the computer
         self.__bot.auto_place_all()
 
-    def __reset_game(self) -> None:
+    def _reset_game(self) -> None:
         """Resets the game back to the start"""
 
         print(f"{Fore.GREEN}RESETTING GAME{Fore.WHITE}")
@@ -29,7 +29,7 @@ class TraditionalBattleships:
         time.sleep(1.5)
         self.play_game()
 
-    def __player_place_boats(self) -> bool:  # True if they want to continue to play
+    def _player_place_boats(self) -> bool:  # True if they want to continue to play
         """Where the player can place their boats on the grid"""
 
         os.system("cls")  # clears the console so we can put the updated grid in
@@ -59,7 +59,7 @@ class TraditionalBattleships:
             # Allows the user to look at the instructions again
             os.system("cls")
             input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
-            self.__player_place_boats()
+            self._player_place_boats()
             return True
 
         elif choice == "auto":
@@ -67,7 +67,7 @@ class TraditionalBattleships:
             print(f"{Fore.BLUE}Placing remaining boats...{Fore.WHITE}")
             self.__player.auto_place_all()
             time.sleep(1.5)
-            self.__player_place_boats()
+            self._player_place_boats()
             return True
 
         elif choice == "quit":
@@ -75,7 +75,7 @@ class TraditionalBattleships:
             return False
 
         elif choice == "reset":
-            self.__reset_game()
+            self._reset_game()
             return True
 
         try:
@@ -91,7 +91,7 @@ class TraditionalBattleships:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
 
-        self.__player_place_boats()
+        self._player_place_boats()
 
     def __handle_shot(self, is_bot: bool, choice: str) -> None:
         """Handles the scenario when the opposition fires a shot"""
@@ -102,7 +102,7 @@ class TraditionalBattleships:
         outcome = player1.shot_recieved(choice)
         os.system("cls")
         # update players guess grid
-        player2.shot_sent(choice, outcome, 1)
+        player2.shot_sent(choice, outcome, 2 if is_bot else 1)
         if outcome == "lost":
             print(
                 f"{Fore.GREEN}{'Player' if not is_bot else 'bot'} wins the game!!!{Fore.WHITE}"
@@ -131,7 +131,7 @@ class TraditionalBattleships:
                 print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
                 return
             elif choice == "reset":
-                self.__reset_game()
+                self._reset_game()
                 return
 
             # Go to the bots grid to see if it hit, missed or sunk a boat
@@ -160,7 +160,7 @@ class TraditionalBattleships:
         os.system("cls")
         input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
 
-        if self.__player_place_boats():
+        if self._player_place_boats():
             input("Press enter to start the game...")
             os.system("cls")
             self.__players_attack()

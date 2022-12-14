@@ -151,8 +151,6 @@ class PlayerGrid:
         else:
             self._guesses_grid[grid_index] = 1
 
-        self.display_board(True, player)
-
     def unplaced_boats_left(self) -> bool:
         """Returns true if there are boats still left to be placed onto the grid"""
 
