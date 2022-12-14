@@ -53,7 +53,6 @@ class TraditionalBattleships:
             print(
                 f"{Fore.GREEN}Boat positions are now locked in... Lets play!{Fore.WHITE}"
             )
-            input("Press enter to start the game...")
             return True
 
         elif choice == "help":
@@ -162,5 +161,6 @@ class TraditionalBattleships:
         input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
 
         if self.__player_place_boats():
+            input("Press enter to start the game...")
             os.system("cls")
             self.__players_attack()
