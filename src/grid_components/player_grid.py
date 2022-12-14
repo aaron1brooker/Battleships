@@ -43,7 +43,7 @@ class PlayerGrid:
             return False
 
         _, y = pos
-        index_row = (y - 1) * self._y_length  # Furthest left value in row
+        index_row = (y - 1) * self._x_length  # Furthest left value in row
         positions = [grid_index]
 
         for ii in range(boat_len - 1):
@@ -188,39 +188,44 @@ class PlayerGrid:
 
         x_axis_label = []
         x_axis_label.append(f"{GridUtil.add_spaces('', column_spacing)}|")
-        for ii in range(self._x_length):
+        for ii in range(1, self._x_length + 1):
             # Print x axis labels
-            if ii + 65 > 90:
-                # For now, we do not allow columns greater than 26
-                raise UserError("X axis is not able to exceed for that 26 columns")
-            x_axis_label.append(chr(ii + 65))
-        print(" ".join(x_axis_label))
+            label = GridUtil.convert_int_to_x_header(ii)
+
+            # ensure that each label has a length of 2
+            if len(label) == 1:
+                label += " "
+            x_axis_label.append(label)
+
+        print(Fore.LIGHTMAGENTA_EX + " ".join(x_axis_label) + Fore.WHITE)
 
         # Print dashes under headers
         x_axis_dashes = []
         x_axis_dashes.append(f"{GridUtil.add_spaces('', column_spacing)}|")
         for ii in range(len(x_axis_label) - len(x_axis_dashes)):
-            x_axis_dashes.append("-")
-        print(" ".join(x_axis_dashes))
+            x_axis_dashes.append("--")
+        print(Fore.LIGHTMAGENTA_EX + " ".join(x_axis_dashes) + Fore.WHITE)
 
         pos = 0
         for y_label in range(self._y_length):
             row_data = []
-            row_data.append(f"{GridUtil.add_spaces(str(y_label + 1), column_spacing)}|")
+            row_data.append(
+                f"{Fore.LIGHTMAGENTA_EX}{GridUtil.add_spaces(str(y_label + 1), column_spacing)}|{Fore.WHITE}"
+            )
             for ii in range(self._x_length):
                 if is_guess_board:
                     if board[pos] == 1:
                         colour = Fore.GREEN if player == 1 else Fore.RED
-                        row_data.append(colour + str(board[pos]) + Fore.WHITE)
+                        row_data.append(f"{colour}{str(board[pos])}{Fore.WHITE} ")
                     elif board[pos] == "x":
-                        row_data.append(Fore.BLACK + board[pos] + Fore.WHITE)
+                        row_data.append(f"{Fore.BLACK}{board[pos]}{Fore.WHITE} ")
                     else:
-                        row_data.append(str(board[pos]))
+                        row_data.append(f"{str(board[pos])} ")
                 else:
                     if board[pos] == 1:
-                        row_data.append(Fore.GREEN + str(board[pos]) + Fore.WHITE)
+                        row_data.append(f"{Fore.GREEN}{str(board[pos])}{Fore.WHITE} ")
                     else:
-                        row_data.append(str(board[pos]))
+                        row_data.append(f"{str(board[pos])} ")
                 pos += 1
 
             print(" ".join(row_data))

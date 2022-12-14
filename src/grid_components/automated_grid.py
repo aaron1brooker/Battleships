@@ -16,8 +16,9 @@ class AutomatedGrid(PlayerGrid):
     def __auto_place_boat(self, boat: str) -> None:
         """Generates a random position and direction to place a specified boat"""
 
-        rnd_x = chr(random.randint(65, 65 + self._x_length - 1))
-        rnd_y = random.randint(1, self._x_length)
+        rnd_x_int = random.randint(1, self._x_length)
+        rnd_x = GridUtil.convert_int_to_x_header(rnd_x_int)
+        rnd_y = random.randint(1, self._y_length)
 
         if not self.place_boat(
             (rnd_x, rnd_y), boat, self.invert_direction[random.randint(1, 4)]
@@ -43,8 +44,9 @@ class AutomatedGrid(PlayerGrid):
     def auto_guess(self) -> str:
         """Randomly makes a unique guess"""
 
-        rnd_x = chr(random.randint(65, 65 + self._x_length - 1))
-        rnd_y = random.randint(1, self._x_length)
+        rnd_x_int = random.randint(1, self._x_length)
+        rnd_x = GridUtil.convert_int_to_x_header(rnd_x_int)
+        rnd_y = random.randint(1, self._y_length)
         guess_str = rnd_x + str(rnd_y)
 
         if not self.is_guess_repeated(guess_str):
