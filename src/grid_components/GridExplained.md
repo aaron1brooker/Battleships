@@ -14,7 +14,7 @@ The grid is made up of a single-dimensional array where each index corresponds t
 - 4 5 6
 - 7 8 9
 
-## The Logic
+## The Logic V1
 
 When the user is prompted to supply the coordinates of where they would like the boat placed, an example of a valid response would be “E1”. In order for the system to locate this position, it needs to find the index where the row values are present (e.g. using the grid above, if we wanted to find 5, the row values would be 4,5,6). Then it would add the letter value to find the index so that it can position the boat (e.g. 5 is the second in the row data so it would add 1). Here is how it looks in a pseudo form:
 
@@ -27,3 +27,12 @@ When the user is prompted to supply the coordinates of where they would like the
 - index_value = index_row + x_num
 
 Please note that the above example is an abstract representation. Feel free to read the code to see how it is actually done and handles other parameters like direction and size.
+
+## What do you do if there are more than 26 columns
+
+The column headers are made up of alphabetical letters. When the grid is dealing with more than 26 columns, it will use multiple letters per column. For example for the 27th column it will use the header ‘AA’ and the 28th will be ‘AB’. It will follow this pattern until it passes ‘AZ’ to which it will increment the furthest left letter up by a character. 
+
+This follows a simple concept to hexidecimal however the main difference is that it will only use letter and it is not base 16. In order to calculate the column value we had to make an enhancement to the logic.
+
+## The Logic V3
+
