@@ -1,24 +1,22 @@
 import os
 import time
+import sys
 
 from colorama import Fore
 
-from src.grid_components.automated_grid import AutomatedGrid
 from util.constants import POSITIONING_HELP_MSG
 from util.exceptions import UserError
 from util.util import GridUtil
+from src.grid_components.automated_grid import AutomatedGrid
 
 
 class BattleshipGame:
     """Parent class that holds all shared methods for Battleships games"""
 
-    def __init__(
-        self, player1: AutomatedGrid, player2: AutomatedGrid, p1_bot: bool, p2_bot: bool
-    ) -> None:
+    def __init__(self, player1, player2, p1_bot: bool, p2_bot: bool) -> None:
         """Constructor"""
 
         # Player1 or Player2 can take the form of any grid_component class
-        # however we set the type as 'AutomatedGrid' so that we get intellisense
         self._player1 = player1
         self._player2 = player2
 
@@ -34,12 +32,10 @@ class BattleshipGame:
         time.sleep(1.5)
         self.play_game()
 
-    def _player_place_boats(
-        self, player_num: int
-    ) -> bool:  # True if they want to continue to play the current game
+    def _player_place_boats(self, player_num: int) -> None:
         """Where the real player can place their boats on the grid"""
 
-        player = self._player1 if player_num == 1 else self._player2
+        player: AutomatedGrid = self._player1 if player_num == 1 else self._player2
 
         os.system("cls")  # clears the console so we can put the updated grid in
         player.display_board(False, 1)
@@ -56,14 +52,14 @@ class BattleshipGame:
                 time.sleep(2)
 
             os.system("cls")
-            return True
+            return
 
         elif choice == "help":
             # Allows the user to look at the instructions again
             os.system("cls")
-            input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
+            input(POSITIONING_HELP_MSG)
             self._player_place_boats(player_num)
-            return True
+            return
 
         elif choice == "auto":
             # Allows the user to auto place all unplaced boats
@@ -71,15 +67,15 @@ class BattleshipGame:
             player.auto_place_all()
             time.sleep(1.5)
             self._player_place_boats(player_num)
-            return True
+            return
 
         elif choice == "quit":
             print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
-            return False
+            sys.exit()
 
         elif choice == "reset":
             self._reset_game()
-            return False
+            sys.exit()
 
         try:
             # try to place the boat
@@ -95,12 +91,11 @@ class BattleshipGame:
             time.sleep(1.5)
 
         self._player_place_boats(player_num)
-        return True
 
     def _place_boat_helper(self, player_num: int) -> None:
         """Helper function for placing boats in play_game"""
 
-        player = self._player1 if player_num == 1 else self._player2
+        player: AutomatedGrid = self._player1 if player_num == 1 else self._player2
         is_player_bot = self._is_p1_bot if player_num == 1 else self._is_p2_bot
 
         if is_player_bot:

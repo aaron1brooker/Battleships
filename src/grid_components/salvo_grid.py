@@ -27,9 +27,7 @@ class SalvoGrid(AutomatedGrid):
 
         return outcomes
 
-    def multi_shots_sent(
-        self, positions: List[str], outcomes: List[str], player: int
-    ) -> None:
+    def multi_shots_sent(self, positions: List[str], outcomes: List[str]) -> None:
         """Handles multipe guess so that the user can track them"""
 
         if len(outcomes) != len(positions):
@@ -40,7 +38,7 @@ class SalvoGrid(AutomatedGrid):
             )
 
         for ii, pos in enumerate(positions):
-            self.shot_sent(pos, outcomes[ii], player)
+            self.shot_sent(pos, outcomes[ii])
 
     def multi_auto_guess(self) -> None:
         """Does an auto guess for each boat the player has left"""
@@ -58,6 +56,9 @@ class SalvoGrid(AutomatedGrid):
         positions = guesses.split()
 
         # First see if there are repeated values in the guesses
+        if len(positions) > self.get_boats_left():
+            raise UserError(f"Did not give {self.get_boats_left()} positions")
+
         if len(set(positions)) != len(positions):
             raise UserError("Each guess requires to be unique")
 

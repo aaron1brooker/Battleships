@@ -1,10 +1,10 @@
 import os
 import time
+import sys
 from colorama import Fore
 
 from src.games.parent_battleship import BattleshipGame
 from src.grid_components.automated_grid import AutomatedGrid
-from util.util import GridUtil
 from util.exceptions import UserError
 from util.constants import POSITIONING_HELP_MSG
 
@@ -15,8 +15,12 @@ class TraditionalBattleships(BattleshipGame):
     def __handle_shot_helper(self, choice: str, player_num: int) -> bool:
         """Helper method to both player and bot shot handlers"""
 
-        player_shooting = self._player1 if player_num == 1 else self._player2
-        player_recieving = self._player2 if player_num == 1 else self._player1
+        player_shooting: AutomatedGrid = (
+            self._player1 if player_num == 1 else self._player2
+        )
+        player_recieving: AutomatedGrid = (
+            self._player2 if player_num == 1 else self._player1
+        )
 
         outcome = player_recieving.shot_recieved(choice)
         os.system("cls")
@@ -35,7 +39,9 @@ class TraditionalBattleships(BattleshipGame):
         try:
             # Require exception handling as we can not guarantee user will enter a valid position
 
-            player_guessing = self._player1 if player_num == 1 else self._player2
+            player_guessing: AutomatedGrid = (
+                self._player1 if player_num == 1 else self._player2
+            )
 
             player_guessing.display_board(True, player_num)
             choice = input(
@@ -45,10 +51,10 @@ class TraditionalBattleships(BattleshipGame):
             # Provide user the option to quit or reset
             if choice == "quit":
                 print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
-                return
+                sys.exit()
             elif choice == "reset":
                 self._reset_game()
-                return
+                sys.exit()
 
             # Check if the choice is repeated
             if player_guessing.is_guess_repeated(choice):
@@ -110,7 +116,7 @@ class TraditionalBattleships(BattleshipGame):
         """Starts the Game"""
 
         os.system("cls")
-        input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
+        input(POSITIONING_HELP_MSG)
 
         # See whether player 1 is a bot and place boats accordingly
         self._place_boat_helper(1)

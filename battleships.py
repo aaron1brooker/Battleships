@@ -41,7 +41,7 @@ class Battleships:
         player2 = SalvoGrid(self.__board["x"], self.__board["y"], self.__boats)
 
         # Play the game
-        salvo_battleships = SalvoBattleships(player1, player2)
+        salvo_battleships = SalvoBattleships(player1, player2, False, True)
         salvo_battleships.play_game()
 
     def menu(self):
