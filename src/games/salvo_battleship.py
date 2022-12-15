@@ -93,27 +93,33 @@ class SalvoBattleships:
             time.sleep(1.5)
 
         self._player_place_boats()
+        return True
 
-    def __handle_shots(self, is_bot: bool ,choice: str) -> None:
+    def __handle_shots(
+        self, is_bot: bool, choice: str
+    ) -> bool:  # True if a player wins the game
         """Handles the scenario when the opposition fires multiple shots"""
 
-        player1 = self.__player2 if not is_bot else self.__player1
-        player2 = self.__player2 if is_bot else self.__player1
+        player_shooting = self.__player2 if is_bot else self.__player1
+        player_recieving = self.__player2 if not is_bot else self.__player1
+        player_num = 2 if is_bot else 1  # The number of the shooter
 
         positions = choice.split()
-        if len(positions) != self.__player2.get_boats_left():
-            raise UserError(f"Did not give {self.__player2.get_boats_left()} positions")
-        outcomes = player1.multi_shots_recieved(positions)
+        if len(positions) > player_shooting.get_boats_left():
+            raise UserError(
+                f"Did not give {player_shooting.get_boats_left()} positions"
+            )
+        outcomes = player_recieving.multi_shots_recieved(positions)
         os.system("cls")
-        player2.multi_shots_sent(positions, outcomes, 2 if is_bot else 1)
+        player_shooting.multi_shots_sent(positions, outcomes, player_num)
         if "lost" in outcomes:
             print(
                 f"{Fore.GREEN}{'Player' if not is_bot else 'bot'} wins the game!!!{Fore.WHITE}"
             )
-            return
-        player2.display_board(True, 2 if is_bot else 1)
+            return True
+        player_shooting.display_board(True, player_num)
         print(f"{Fore.BLUE}{' '.join(outcomes)}!{Fore.WHITE}")
-        
+        return False
 
     def __players_attack(self) -> None:
         """Where both player and computer choose positions to try to hit their opponent"""
@@ -124,9 +130,9 @@ class SalvoBattleships:
             self.__player1.display_board(True, 1)
             boats_left = self.__player1.get_boats_left()
             choice = input(
-                f"{Fore.BLUE}\nEnter {boats_left} position(s) to try to shoot your opponents ships. E.g. C1 A2 B3 if you had 3 ships left: {Fore.WHITE}"
+                f"{Fore.BLUE}\nEnter {boats_left} position(s) or less to try to shoot your opponents ships. E.g. C1 A2 B3 if you had 3 ships left: {Fore.WHITE}"
             ).lower()
-            
+
             if choice == "quit":
                 print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
                 return
@@ -134,8 +140,15 @@ class SalvoBattleships:
                 self._reset_game()
                 return
 
+            error_guesses = self.__player1.multi_guess_validation(choice)
+            if len(error_guesses) != 0:
+                raise UserError(
+                    f"{' '.join([x for x in error_guesses])} are either repeated or unvalid positions"
+                )
+
             # Go to the bots grid to see if it hit, missed or sunk a boat
-            self.__handle_shots(False, choice)
+            if self.__handle_shots(False, choice):
+                return
             input("Press enter to start the BOTS turn...")
 
             # bots turn
@@ -143,7 +156,8 @@ class SalvoBattleships:
             self.__player2.display_board(True, 2)
             # auto guess will be unique to the bots guesses
             choice = self.__player2.multi_auto_guess()
-            self.__handle_shots(True, choice)
+            if self.__handle_shots(True, choice):
+                return
             input("Press enter to start your turn again...")
 
             # recursive until bot or player wins
@@ -153,12 +167,12 @@ class SalvoBattleships:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
             self.__players_attack()
-        
+
         except RuntimeError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
             self.__players_attack()
-        
+
     def play_game(self) -> None:
         """Starts the Game"""
 

@@ -92,26 +92,32 @@ class TraditionalBattleships:
             time.sleep(1.5)
 
         self._player_place_boats()
+        return True
 
-    def __handle_shot(self, is_bot: bool, choice: str) -> None:
+    def __handle_shot(
+        self, is_bot: bool, choice: str
+    ) -> bool:  # True if player wins a game
         """Handles the scenario when the opposition fires a shot"""
 
         player1 = self.__bot if not is_bot else self.__player
         player2 = self.__bot if is_bot else self.__player
+        player_num = 2 if is_bot else 1
 
         outcome = player1.shot_recieved(choice)
         os.system("cls")
         # update players guess grid
-        player2.shot_sent(choice, outcome, 2 if is_bot else 1)
+        player2.shot_sent(choice, outcome, player_num)
+        player2.display_board(True, player_num)
         if outcome == "lost":
             print(
                 f"{Fore.GREEN}{'Player' if not is_bot else 'bot'} wins the game!!!{Fore.WHITE}"
             )
-            return
+            return True
         if is_bot:
             print(f"{Fore.BLUE}\nBOTS turn... It chose {choice} and it...{Fore.WHITE}")
             time.sleep(1)
         print(f"{Fore.BLUE}{outcome}!{Fore.WHITE}")
+        return False
 
     def __players_attack(self) -> None:
         """Where both player and computer choose a position to try to hit their opponent"""
@@ -123,9 +129,6 @@ class TraditionalBattleships:
             choice = input(
                 f"{Fore.BLUE}\nEnter a position to try to shoot your opponents ship: {Fore.WHITE}"
             ).lower()
-            # Check if the choice is repeated
-            if self.__player.is_guess_repeated(choice):
-                raise UserError("This guess has already been made")
 
             if choice == "quit":
                 print(f"{Fore.GREEN}Thank you for playing!{Fore.WHITE}")
@@ -134,8 +137,13 @@ class TraditionalBattleships:
                 self._reset_game()
                 return
 
+            # Check if the choice is repeated
+            if self.__player.is_guess_repeated(choice):
+                raise UserError("This guess has already been made")
+
             # Go to the bots grid to see if it hit, missed or sunk a boat
-            self.__handle_shot(False, choice)
+            if self.__handle_shot(False, choice):
+                return
             input("Press enter to start the BOTS turn...")
 
             # bots turn
@@ -143,7 +151,8 @@ class TraditionalBattleships:
             self.__bot.display_board(True, 2)
             # auto guess will be unique to the bots guesses
             choice = self.__bot.auto_guess()
-            self.__handle_shot(True, choice)
+            if self.__handle_shot(True, choice):
+                return
             input("Press enter to start your turn again...")
 
             # recursive until bot or player wins

@@ -33,7 +33,7 @@ class Battleships:
         # Play the game
         battleships = TraditionalBattleships(player1, player2)
         battleships.play_game()
-    
+
     def __salvo_battleships(self):
 
         # Intialise Players
