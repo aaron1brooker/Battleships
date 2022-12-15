@@ -51,6 +51,13 @@ class SalvoBattleships(BattleshipGame):
             elif choice == "reset":
                 self._reset_game()
                 sys.exit()
+            elif choice == "auto":
+                choice = player_guessing.multi_auto_guess()
+                # validation is not required as it is generated
+                print(f"{Fore.BLUE}Generating a positions... {choice}{Fore.WHITE}")
+                time.sleep(1.5)
+                os.system("cls")
+                return self.__handle_shots_helper(choice, player_num)
 
             error_guesses = player_guessing.multi_guess_validation(choice)
             if len(error_guesses) != 0:

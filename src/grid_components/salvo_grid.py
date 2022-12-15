@@ -40,7 +40,7 @@ class SalvoGrid(AutomatedGrid):
         for ii, pos in enumerate(positions):
             self.shot_sent(pos, outcomes[ii])
 
-    def multi_auto_guess(self) -> None:
+    def multi_auto_guess(self) -> str:
         """Does an auto guess for each boat the player has left"""
 
         choices = []

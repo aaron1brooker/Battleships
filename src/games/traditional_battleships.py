@@ -55,6 +55,12 @@ class TraditionalBattleships(BattleshipGame):
             elif choice == "reset":
                 self._reset_game()
                 sys.exit()
+            elif choice == "auto":
+                choice = player_guessing.auto_guess()
+                print(f"{Fore.BLUE}Generating a position... {choice}{Fore.WHITE}")
+                time.sleep(1.5)
+                os.system("cls")
+                return self.__handle_shot_helper(choice, player_num)
 
             # Check if the choice is repeated
             if player_guessing.is_guess_repeated(choice):
