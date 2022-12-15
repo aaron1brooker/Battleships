@@ -97,6 +97,26 @@ class BattleshipGame:
         self._player_place_boats(player_num)
         return True
 
+    def _place_boat_helper(self, player_num: int) -> None:
+        """Helper function for placing boats in play_game"""
+
+        player = self._player1 if player_num == 1 else self._player2
+        is_player_bot = self._is_p1_bot if player_num == 1 else self._is_p2_bot
+
+        if is_player_bot:
+            player.auto_place_all()
+            print(
+                f"{Fore.BLUE}Player {player_num} BOT... placing all boats{Fore.WHITE}"
+            )
+            time.sleep(1.5)
+        else:
+            if not self._player_place_boats(player_num):
+                # If player wants to quit game
+                return
+        # Show final result
+        player.display_board(False, player_num)
+        print(f"{Fore.GREEN}Boat positions are now locked in...{Fore.WHITE}")
+
     def play_game():
         """This method will be overwritten in each child class"""
         # required for the reset method

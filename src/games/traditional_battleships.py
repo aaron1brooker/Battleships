@@ -29,9 +29,7 @@ class TraditionalBattleships(BattleshipGame):
         print(f"{Fore.BLUE}{outcome}!{Fore.WHITE}")
         return False
 
-    def __handle_player_shot(
-        self, player_num: int
-    ) -> bool:  # True if player wins a game
+    def __handle_player_shot(self, player_num: int) -> bool:
         """Handles the scenario when a player fires a shot"""
 
         try:
@@ -108,26 +106,6 @@ class TraditionalBattleships(BattleshipGame):
         # recursive until bot or player wins
         self.__players_attack()
 
-    def __place_boat_helper(self, player_num: int) -> None:
-        """Helper function for placing boats in play_game"""
-
-        player = self._player1 if player_num == 1 else self._player2
-        is_player_bot = self._is_p1_bot if player_num == 1 else self._is_p2_bot
-
-        if is_player_bot:
-            player.auto_place_all()
-            print(
-                f"{Fore.BLUE}Player {player_num} BOT... placing all boats{Fore.WHITE}"
-            )
-            time.sleep(1.5)
-        else:
-            if not self._player_place_boats(player_num):
-                # If player wants to quit game
-                return
-        # Show final result
-        player.display_board(False, player_num)
-        print(f"{Fore.GREEN}Boat positions are now locked in...{Fore.WHITE}")
-
     def play_game(self) -> None:
         """Starts the Game"""
 
@@ -135,13 +113,13 @@ class TraditionalBattleships(BattleshipGame):
         input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
 
         # See whether player 1 is a bot and place boats accordingly
-        self.__place_boat_helper(1)
+        self._place_boat_helper(1)
 
         input("Press enter to move onto player 2's turn...")
         os.system("cls")
 
         # Now we do the same but with player 2
-        self.__place_boat_helper(2)
+        self._place_boat_helper(2)
 
         input("Press enter to start the game...")
         os.system("cls")

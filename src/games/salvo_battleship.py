@@ -3,23 +3,15 @@ import time
 
 from colorama import Fore
 
+from src.games.parent_battleship import BattleshipGame
+from src.grid_components.salvo_grid import SalvoGrid
 from util.exceptions import UserError
 from util.constants import POSITIONING_HELP_MSG
 from util.util import GridUtil
-from src.grid_components.salvo_grid import SalvoGrid
 
 
-class SalvoBattleships:
+class SalvoBattleships(BattleshipGame):
     """Salvo Battleships player vs computer"""
-
-    def __init__(self, player1: SalvoGrid, player2: SalvoGrid) -> None:
-        """Constructor"""
-
-        self.__player1 = player1
-        self.__player2 = player2
-
-        # place boats for the computer
-        self.__player2.auto_place_all()
 
     def _reset_game(self) -> None:
         """Resets the game back to the start"""
