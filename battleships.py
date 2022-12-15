@@ -70,7 +70,7 @@ def main():
     try:
         battleships = Battleships()
         battleships.menu()
-        
+
     except Exception as e:
         # This is the wrapper handler to catch any unhandled exceptions
         logging.error(e)

@@ -24,9 +24,7 @@ class TraditionalBattleships(BattleshipGame):
         player_recieving.shot_sent(choice, outcome, player_num)
         player_recieving.display_board(True, player_num)
         if outcome == "lost":
-            print(
-                f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}"
-            )
+            print(f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}")
             return True
         print(f"{Fore.BLUE}{outcome}!{Fore.WHITE}")
         return False
@@ -59,9 +57,9 @@ class TraditionalBattleships(BattleshipGame):
                 print("This guess has already been made, try again")
                 time.sleep(1.5)
                 return self.__handle_player_shot(player_num)
-            
+
             return self.__handle_shot_helper(choice, player_num)
-        
+
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
@@ -114,7 +112,9 @@ class TraditionalBattleships(BattleshipGame):
 
         if is_player_bot:
             player.auto_place_all()
-            print(f"{Fore.BLUE}Player {player_num} BOT... placing all boats{Fore.WHITE}")
+            print(
+                f"{Fore.BLUE}Player {player_num} BOT... placing all boats{Fore.WHITE}"
+            )
             time.sleep(1.5)
         else:
             if not self._player_place_boats(player_num):
@@ -122,22 +122,20 @@ class TraditionalBattleships(BattleshipGame):
                 return
         # Show final result
         player.display_board(False, player_num)
-        print(
-            f"{Fore.GREEN}Boat positions are now locked in...{Fore.WHITE}"
-        )
+        print(f"{Fore.GREEN}Boat positions are now locked in...{Fore.WHITE}")
 
     def play_game(self) -> None:
         """Starts the Game"""
 
         os.system("cls")
         input(Fore.BLUE + POSITIONING_HELP_MSG + Fore.WHITE)
-        
+
         # See whether player 1 is a bot and place boats accordingly
         self.__place_boat_helper(1)
-        
+
         input("Press enter to move onto player 2's turn...")
         os.system("cls")
-        
+
         # Now we do the same but with player 2
         self.__place_boat_helper(2)
 
