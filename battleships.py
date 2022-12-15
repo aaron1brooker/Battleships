@@ -31,7 +31,7 @@ class Battleships:
         player2 = AutomatedGrid(self.__board["x"], self.__board["y"], self.__boats)
 
         # Play the game
-        battleships = TraditionalBattleships(player1, player2)
+        battleships = TraditionalBattleships(player1, player2, False, True)
         battleships.play_game()
 
     def __salvo_battleships(self):
@@ -70,6 +70,7 @@ def main():
     try:
         battleships = Battleships()
         battleships.menu()
+        
     except Exception as e:
         # This is the wrapper handler to catch any unhandled exceptions
         logging.error(e)
