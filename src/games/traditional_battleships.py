@@ -15,14 +15,14 @@ class TraditionalBattleships(BattleshipGame):
     def __handle_shot_helper(self, choice: str, player_num: int) -> bool:
         """Helper method to both player and bot shot handlers"""
 
-        player_shooting = self._player1 if 1 else self._player2
-        player_recieving = self._player2 if 1 else self._player1
+        player_shooting = self._player1 if player_num == 1 else self._player2
+        player_recieving = self._player2 if player_num == 1 else self._player1
 
-        outcome = player_shooting.shot_recieved(choice)
+        outcome = player_recieving.shot_recieved(choice)
         os.system("cls")
         # update players guess grid
-        player_recieving.shot_sent(choice, outcome, player_num)
-        player_recieving.display_board(True, player_num)
+        player_shooting.shot_sent(choice, outcome)
+        player_shooting.display_board(True, player_num)
         if outcome == "lost":
             print(f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}")
             return True
@@ -37,7 +37,7 @@ class TraditionalBattleships(BattleshipGame):
         try:
             # Require exception handling as we can not guarantee user will enter a valid position
 
-            player_guessing = self._player1 if 1 else self._player2
+            player_guessing = self._player1 if player_num == 1 else self._player2
 
             player_guessing.display_board(True, player_num)
             choice = input(
@@ -56,6 +56,7 @@ class TraditionalBattleships(BattleshipGame):
             if player_guessing.is_guess_repeated(choice):
                 print("This guess has already been made, try again")
                 time.sleep(1.5)
+                os.system("cls")
                 return self.__handle_player_shot(player_num)
 
             return self.__handle_shot_helper(choice, player_num)
@@ -63,17 +64,20 @@ class TraditionalBattleships(BattleshipGame):
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
+            os.system("cls")
             return self.__handle_player_shot(player_num)
 
     def __handle_bot_shot(self, player_num: int) -> bool:
         """Handles the scenario when a bot fires a shot"""
 
-        player_guessing = self._player1 if 1 else self._player2
+        player_guessing = self._player1 if player_num == 1 else self._player2
 
-        player_guessing.display_board(True, 2)
+        self._player2.display_board(True, player_num)
         # auto guess will be unique to the bots guesses
         choice = player_guessing.auto_guess()
 
+        print(f"Player {player_num} BOT chose {choice}")
+        time.sleep(1.5)
         return self.__handle_shot_helper(choice, player_num)
 
     def __players_attack(self) -> None:
@@ -92,7 +96,7 @@ class TraditionalBattleships(BattleshipGame):
 
         # player 2's turn to attack
         os.system("cls")
-        if self._is_p1_bot:
+        if self._is_p2_bot:
             if self.__handle_bot_shot(2):
                 return
         else:

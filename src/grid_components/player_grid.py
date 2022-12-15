@@ -141,7 +141,7 @@ class PlayerGrid:
 
         return "missed"
 
-    def shot_sent(self, pos: str, status: str, player: int) -> None:
+    def shot_sent(self, pos: str, status: str) -> None:
         """Allows the user to track their guesses"""
 
         pos_tuple = GridUtil.position_to_tuple(pos)
