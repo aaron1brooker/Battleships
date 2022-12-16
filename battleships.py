@@ -6,8 +6,10 @@ from colorama import Fore
 from svc.game_setup import GameSetup
 from src.grid_components.automated_grid import AutomatedGrid
 from src.grid_components.salvo_grid import SalvoGrid
+from src.grid_components.mines_grid import MinesGrid
 from src.games.traditional_battleships import TraditionalBattleships
 from src.games.salvo_battleship import SalvoBattleships
+from src.games.hidden_mines import HiddenMines
 
 # Logging output will be put into a txt file to help debugging
 logging.basicConfig(filename="logs.txt", level=logging.INFO)
@@ -66,6 +68,17 @@ class Battleships:
         # Play the game
         salvo_battleships = SalvoBattleships(player1, player2, False, False)
         salvo_battleships.play_game()
+    
+    def __hidden_mines_battleship(self):
+        "Play Hidden Mines Battleships"
+
+        # Intialise Players
+        player1 = MinesGrid(self.__board["x"], self.__board["y"], self.__boats)
+        player2 = MinesGrid(self.__board["x"], self.__board["y"], self.__boats)
+
+        # Play the game
+        salvo_battleships = HiddenMines(player1, player2, False, True)
+        salvo_battleships.play_game()        
 
     def menu(self):
         """Allows the user to choose the game to play"""
@@ -91,6 +104,9 @@ class Battleships:
             self.__salvo_battleships_two_player()
             return
         elif user_choice == "5":
+            self.__hidden_mines_battleship()
+            return
+        elif user_choice == "6":
             print(f"{Fore.BLUE}Goodbye!!{Fore.WHITE}")
             return
         else:
