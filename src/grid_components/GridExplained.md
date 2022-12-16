@@ -30,9 +30,14 @@ Please note that the above example is an abstract representation. Feel free to r
 
 ## What do you do if there are more than 26 columns
 
-The column headers are made up of alphabetical letters. When the grid is dealing with more than 26 columns, it will use multiple letters per column. For example for the 27th column it will use the header ‘AA’ and the 28th will be ‘AB’. It will follow this pattern until it passes ‘AZ’ to which it will increment the furthest left letter up by a character. 
+The column headers are made up of alphabetical letters. When the grid is dealing with more than 26 columns, it will use multiple letters per column. For example for the 27th column it will use the header ‘AA’ and the 28th will be ‘AB’. It will follow this pattern until it passes ‘AZ’ to which it will increment the furthest left letter up by a character.
 
 This follows a simple concept to hexidecimal however the main difference is that it will only use letter and it is not base 16. In order to calculate the column value we had to make an enhancement to the logic.
 
-## The Logic V3
+## The Logic V2
+
+An abstracted view of how to find the index when supplied the x coordinate in the form of two letters.
+
+<img src="https://user-images.githubusercontent.com/54953569/208067755-2ee2aec3-f062-4a85-936d-5ae5d4f43aeb.png" width="600" height="350">
+
 
