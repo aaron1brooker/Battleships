@@ -57,7 +57,7 @@ class Battleships:
         salvo_battleships.play_game()
 
     def __salvo_battleships_two_player(self):
-        """Play Salvo Battleships (player vs computer)"""
+        """Play Salvo Battleships (Two Player)"""
 
         # Intialise Players
         player1 = SalvoGrid(self.__board["x"], self.__board["y"], self.__boats)
