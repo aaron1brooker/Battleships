@@ -52,6 +52,7 @@ class BattleshipGame:
                 time.sleep(2)
 
             os.system("cls")
+            player.display_board(False, player_num)
             return
 
         elif choice == "help":
