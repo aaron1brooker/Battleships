@@ -66,4 +66,22 @@ The stories related to this stage:
 - Provide the user a grid for their guesses and show where they have hit or missed a boat.
 - Allow the user to reset or quit the game at any time.
 
+## Stage 4 - Salvo Game (extend v1)
+
+If you would like to understand more about this PR, please read the description:
+
+https://github.com/aaron1brooker/Battleships/pull/4
+
+I have also purposely not deleted the branch so for more insight on the code at this point look at:
+
+https://github.com/aaron1brooker/Battleships/tree/salvo-game
+
+The stories realted to this stage:
+
+- The game needs to be able to support up to 80 columns and rows.
+- Implement ‘Salvo’ variant of Battleships (player v computer).
+- Add an autofire option to both games.
+- Implement two player Battleships.
+- Implement two player Salvo Battleships.
+
 
