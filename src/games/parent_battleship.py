@@ -38,7 +38,7 @@ class BattleshipGame:
         player: AutomatedGrid = self._player1 if player_num == 1 else self._player2
 
         os.system("cls")  # clears the console so we can put the updated grid in
-        player.display_board(False, 1)
+        player.display_board(False, player_num)
         player.display_remaining_boats()
         choice = input(
             f"{Fore.BLUE}\nEnter the boat, postion and direction or type help for a list of commands: {Fore.WHITE}"

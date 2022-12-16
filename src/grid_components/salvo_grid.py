@@ -20,9 +20,6 @@ class SalvoGrid(AutomatedGrid):
         outcomes = []
 
         for pos in positions:
-            # Don't allow any repeated guesses
-            if self.is_guess_repeated(pos):
-                raise UserError(f"{pos} guess has already been made")
             outcomes.append(self.shot_recieved(pos))
 
         return outcomes
@@ -44,6 +41,13 @@ class SalvoGrid(AutomatedGrid):
         """Does an auto guess for each boat the player has left"""
 
         choices = []
+        # Check how many positions are left on the grid that have not been guessed
+        pos_left = len(self._grid) - len(self._guesses)
+        if pos_left < self.get_boats_left():
+            for _ in range(pos_left):
+                choices.append(self.auto_guess())
+            return " ".join(choices)
+
         for _ in range(self.get_boats_left()):
             choices.append(self.auto_guess())
 
@@ -55,10 +59,10 @@ class SalvoGrid(AutomatedGrid):
         error_guesses = []
         positions = guesses.split()
 
-        # First see if there are repeated values in the guesses
-        if len(positions) > self.get_boats_left():
+        if len(positions) > self.get_boats_left() and len(positions) == 0:
             raise UserError(f"Did not give {self.get_boats_left()} positions")
 
+        # See if each position is different
         if len(set(positions)) != len(positions):
             raise UserError("Each guess requires to be unique")
 

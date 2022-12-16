@@ -6,7 +6,7 @@ from colorama import Fore
 from src.games.parent_battleship import BattleshipGame
 from src.grid_components.automated_grid import AutomatedGrid
 from util.exceptions import UserError
-from util.constants import POSITIONING_HELP_MSG
+from util.constants import POSITIONING_HELP_MSG, GUESSING_HELP_MSG
 
 
 class TraditionalBattleships(BattleshipGame):
@@ -61,6 +61,10 @@ class TraditionalBattleships(BattleshipGame):
                 time.sleep(1.5)
                 os.system("cls")
                 return self.__handle_shot_helper(choice, player_num)
+            elif choice == "help":
+                os.system("cls")
+                input(GUESSING_HELP_MSG)
+                return self.__handle_player_shot(player_num)
 
             # Check if the choice is repeated
             if player_guessing.is_guess_repeated(choice):
@@ -80,9 +84,11 @@ class TraditionalBattleships(BattleshipGame):
     def __handle_bot_shot(self, player_num: int) -> bool:
         """Handles the scenario when a bot fires a shot"""
 
-        player_guessing = self._player1 if player_num == 1 else self._player2
+        player_guessing: AutomatedGrid = (
+            self._player1 if player_num == 1 else self._player2
+        )
 
-        self._player2.display_board(True, player_num)
+        player_guessing.display_board(True, player_num)
         # auto guess will be unique to the bots guesses
         choice = player_guessing.auto_guess()
 
@@ -134,5 +140,7 @@ class TraditionalBattleships(BattleshipGame):
         self._place_boat_helper(2)
 
         input("Press enter to start the game...")
+        os.system("cls")
+        input(GUESSING_HELP_MSG)
         os.system("cls")
         self.__players_attack()

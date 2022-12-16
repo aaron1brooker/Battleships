@@ -7,8 +7,7 @@ from colorama import Fore
 from src.games.parent_battleship import BattleshipGame
 from src.grid_components.salvo_grid import SalvoGrid
 from util.exceptions import UserError
-from util.constants import POSITIONING_HELP_MSG
-from util.util import GridUtil
+from util.constants import SALVO_GUESSING_HELP_MSG, POSITIONING_HELP_MSG
 
 
 class SalvoBattleships(BattleshipGame):
@@ -39,6 +38,7 @@ class SalvoBattleships(BattleshipGame):
         player_guessing: SalvoGrid = self._player1 if player_num == 1 else self._player2
 
         try:
+            os.system("cls")
             player_guessing.display_board(True, player_num)
             boats_left = player_guessing.get_boats_left()
             choice = input(
@@ -58,6 +58,10 @@ class SalvoBattleships(BattleshipGame):
                 time.sleep(1.5)
                 os.system("cls")
                 return self.__handle_shots_helper(choice, player_num)
+            elif choice == "help":
+                os.system("cls")
+                input(SALVO_GUESSING_HELP_MSG)
+                return self.__handle_players_shots(player_num)
 
             error_guesses = player_guessing.multi_guess_validation(choice)
             if len(error_guesses) != 0:
@@ -85,7 +89,7 @@ class SalvoBattleships(BattleshipGame):
 
         player_guessing: SalvoGrid = self._player1 if player_num == 1 else self._player2
 
-        player_guessing.display_board(True, 2)
+        player_guessing.display_board(True, player_num)
         # auto guess will be unique to the bots guesses
         choice = player_guessing.multi_auto_guess()
         return self.__handle_shots_helper(choice, player_num)
@@ -134,5 +138,7 @@ class SalvoBattleships(BattleshipGame):
         self._place_boat_helper(2)
 
         input("Press enter to start the game...")
+        os.system("cls")
+        input(SALVO_GUESSING_HELP_MSG)
         os.system("cls")
         self.__players_attack()

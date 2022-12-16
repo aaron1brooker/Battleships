@@ -24,7 +24,7 @@ class Battleships:
         self.__board, self.__boats = game_config.get_game_config()
 
     def __battleships(self):
-        """Play Battleships (real player vs computer)"""
+        """Play Battleships (player vs computer)"""
 
         # Intialise Players
         player1 = AutomatedGrid(self.__board["x"], self.__board["y"], self.__boats)
@@ -34,7 +34,19 @@ class Battleships:
         battleships = TraditionalBattleships(player1, player2, False, True)
         battleships.play_game()
 
+    def __battleships_two_player(self):
+        """Play Battleships (Two Player)"""
+
+        # Intialise Players
+        player1 = AutomatedGrid(self.__board["x"], self.__board["y"], self.__boats)
+        player2 = AutomatedGrid(self.__board["x"], self.__board["y"], self.__boats)
+
+        # Play the game
+        battleships = TraditionalBattleships(player1, player2, False, False)
+        battleships.play_game()
+
     def __salvo_battleships(self):
+        """Play Salvo Battleships (player vs computer)"""
 
         # Intialise Players
         player1 = SalvoGrid(self.__board["x"], self.__board["y"], self.__boats)
@@ -44,20 +56,41 @@ class Battleships:
         salvo_battleships = SalvoBattleships(player1, player2, False, True)
         salvo_battleships.play_game()
 
+    def __salvo_battleships_two_player(self):
+        """Play Salvo Battleships (player vs computer)"""
+
+        # Intialise Players
+        player1 = SalvoGrid(self.__board["x"], self.__board["y"], self.__boats)
+        player2 = SalvoGrid(self.__board["x"], self.__board["y"], self.__boats)
+
+        # Play the game
+        salvo_battleships = SalvoBattleships(player1, player2, False, False)
+        salvo_battleships.play_game()
+
     def menu(self):
         """Allows the user to choose the game to play"""
 
         os.system("cls")
 
-        menu_screen = f"{Fore.BLUE}MENU:\n{Fore.WHITE}1) Battleships (player v computer)\n2) Salvo Battleships (player v computer)\n3) Quit\n"
+        menu_screen = (
+            f"{Fore.BLUE}MENU:\n{Fore.WHITE}1) Battleships (player v computer)\n2) Battleships (two player)\n3) Salvo Battleships (player v computer)\n"
+            + "4) Salvo Battleships (two player)\n5) Quit\n"
+        )
         user_choice = input(menu_screen)
 
         if user_choice == "1":
             self.__battleships()
             return
         elif user_choice == "2":
-            self.__salvo_battleships()
+            self.__battleships_two_player()
+            return
         elif user_choice == "3":
+            self.__salvo_battleships()
+            return
+        elif user_choice == "4":
+            self.__salvo_battleships_two_player()
+            return
+        elif user_choice == "5":
             print(f"{Fore.BLUE}Goodbye!!{Fore.WHITE}")
             return
         else:

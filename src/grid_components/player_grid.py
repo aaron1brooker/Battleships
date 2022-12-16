@@ -146,6 +146,7 @@ class PlayerGrid:
 
         pos_tuple = GridUtil.position_to_tuple(pos)
         grid_index = GridUtil.find_index(pos_tuple, self._x_length, self._y_length)
+
         if status == "missed":
             self._guesses_grid[grid_index] = "x"
         else:
