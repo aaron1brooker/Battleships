@@ -24,7 +24,7 @@ class GridUtil:
     def position_to_tuple(pos: str) -> Tuple[str, int]:
         """converts a postion string to a tuple"""
 
-        pattern = "^[A-Za-z][0-9]{1,2}"  # This regex pattern will allow all values that contain
+        pattern = "^[A-Za-z]{1,2}[0-9]{1,2}"  # This regex pattern will allow all values that contain
         # one letter & one or two numbers.
 
         if len(re.findall(pattern, pos)) == 0:  # check if pos has complied with regex
@@ -62,8 +62,23 @@ class GridUtil:
         """Finds the indexs of where the position is held in the grids array"""
 
         x, y = pos
-        x_int = ord(x.upper()) - 65
+        x = x.upper()
         y -= 1
+
+        position_values = []
+        for letter in x:
+            letter_int = ord(letter) - 64
+            position_values.append(letter_int)
+
+        if len(position_values) == 1:
+            x_int = position_values[0]
+        else:
+            sum = 26
+            for ii in range(len(position_values) - 1):
+                sum *= position_values[ii]
+            x_int = sum + position_values[len(position_values) - 1]
+
+        x_int -= 1
 
         if not 0 <= x_int < x_length:
             logging.error(f"{x} is not a valid x value")
@@ -73,7 +88,7 @@ class GridUtil:
             logging.error(f"{y} is not a valid y value")
             raise UserError("Not a valid y value")
 
-        return (y * y_length) + x_int
+        return (y * x_length) + x_int
 
     @staticmethod
     def structure_all_boats(
@@ -121,3 +136,20 @@ class GridUtil:
 
             display_rows.append(display_row)
         return display_rows
+
+    @staticmethod
+    def convert_int_to_x_header(value: int) -> str:
+        """Converts an integer to the appropriate header value. E.g. 1 = A"""
+
+        value_div = value // 26
+        value_remainder = value % 26
+
+        if value_remainder == 0:
+            if value_div == 1:
+                return "Z"  # 26th letter in alphabet is Z
+            # As 26 equally goes into value we know it is a letter + Z
+            # Also, it is still apart of previous set so we minus 1
+            return str(chr(value_div - 1 + 64)) + "Z"
+        if value_div == 0:
+            return str(chr(value_remainder + 64))
+        return str(chr(value_div + 64)) + str(chr(value_remainder + 64))
