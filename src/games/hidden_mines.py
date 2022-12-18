@@ -9,15 +9,14 @@ from src.games.parent_battleship import BattleshipGame
 from util.constants import GUESSING_HELP_MSG, POSITIONING_HELP_MSG
 from util.exceptions import UserError
 
+
 class HiddenMines(BattleshipGame):
     """Play Hidden Mines Battleships"""
 
     def __handle_shot_helper(self, choice: str, player_num: int) -> bool:
         """Helper method to both player and bot shot handlers"""
 
-        player_shooting: MinesGrid = (
-            self._player1 if player_num == 1 else self._player2
-        )
+        player_shooting: MinesGrid = self._player1 if player_num == 1 else self._player2
         player_recieving: MinesGrid = (
             self._player2 if player_num == 1 else self._player1
         )
@@ -25,15 +24,20 @@ class HiddenMines(BattleshipGame):
         outcomes = player_recieving.shot_recieved_mine(choice)
         os.system("cls")
         # update players guess grid
+        user_outcomes = []  # this is what the user sees
         for status in outcomes:
             for choice in outcomes[status]:
                 player_shooting.shot_sent(choice, status)
                 if status == "lost":
-                    print(f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}")
+                    print(
+                        f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}"
+                    )
                     return True
-                
-                print(f"{Fore.BLUE}{status}!{Fore.WHITE}")
-                input()
+
+                user_outcomes.append(status)
+
+        player_shooting.display_board(True, player_num)
+        print(f"{Fore.BLUE}{' '.join(user_outcomes)}!{Fore.WHITE}")
         return False
 
     def __handle_player_shot(self, player_num: int) -> bool:
@@ -87,9 +91,7 @@ class HiddenMines(BattleshipGame):
     def __handle_bot_shot(self, player_num: int) -> bool:
         """Handles the scenario when a bot fires a shot"""
 
-        player_guessing: MinesGrid = (
-            self._player1 if player_num == 1 else self._player2
-        )
+        player_guessing: MinesGrid = self._player1 if player_num == 1 else self._player2
 
         player_guessing.display_board(True, player_num)
         # auto guess will be unique to the bots guesses
@@ -122,6 +124,7 @@ class HiddenMines(BattleshipGame):
             if self.__handle_player_shot(2):
                 return
 
+        input("Press enter to start Player 1's turn...")
         # recursive until bot or player wins
         self.__players_attack()
 

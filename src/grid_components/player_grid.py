@@ -149,6 +149,8 @@ class PlayerGrid:
 
         if status == "missed":
             self._guesses_grid[grid_index] = "x"
+        elif status == "mine":
+            self._guesses_grid[grid_index] = "m"
         else:
             self._guesses_grid[grid_index] = 1
 
@@ -218,6 +220,8 @@ class PlayerGrid:
                         row_data.append(f"{colour}{str(board[pos])}{Fore.WHITE} ")
                     elif board[pos] == "x":
                         row_data.append(f"{Fore.BLACK}{board[pos]}{Fore.WHITE} ")
+                    elif board[pos] == "m":
+                        row_data.append(f"{Fore.CYAN}{board[pos]}{Fore.WHITE} ")
                     else:
                         row_data.append(f"{str(board[pos])} ")
                 else:

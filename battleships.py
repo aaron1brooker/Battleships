@@ -68,7 +68,7 @@ class Battleships:
         # Play the game
         salvo_battleships = SalvoBattleships(player1, player2, False, False)
         salvo_battleships.play_game()
-    
+
     def __hidden_mines_battleship(self):
         "Play Hidden Mines Battleships"
 
@@ -78,7 +78,7 @@ class Battleships:
 
         # Play the game
         salvo_battleships = HiddenMines(player1, player2, False, True)
-        salvo_battleships.play_game()        
+        salvo_battleships.play_game()
 
     def menu(self):
         """Allows the user to choose the game to play"""

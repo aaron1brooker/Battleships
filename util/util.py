@@ -89,7 +89,7 @@ class GridUtil:
             raise UserError("Not a valid y value")
 
         return (y * x_length) + x_int
-    
+
     @staticmethod
     def index_to_position(index: int, x_length) -> str:
         """Converts the index of the array into a board position"""
@@ -99,10 +99,10 @@ class GridUtil:
         while (index - x_length) > 0:
             index -= x_length
             y += 1
-        
+
         x = index
         return chr(x + 65) + str(y + 1)
-    
+
     @staticmethod
     def structure_all_boats(
         unplaced_boats: List[str], placed_boats: List[str]
