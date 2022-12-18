@@ -91,19 +91,6 @@ class GridUtil:
         return (y * x_length) + x_int
 
     @staticmethod
-    def index_to_position(index: int, x_length) -> str:
-        """Converts the index of the array into a board position"""
-
-        x = 0
-        y = 0
-        while (index - x_length) > 0:
-            index -= x_length
-            y += 1
-
-        x = index
-        return chr(x + 65) + str(y + 1)
-
-    @staticmethod
     def structure_all_boats(
         unplaced_boats: List[str], placed_boats: List[str]
     ) -> List[str]:
