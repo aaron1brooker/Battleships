@@ -3,6 +3,12 @@
 
 This repository is for part of my submission for the Advance Programming Module Part B at Ada College.
 
+
+It is recommended that you run this repository on a windows machine however, if you would like to use replit, please follow this link: 
+https://replit.com/@aaron1brooker/Battleships-Replit-Version?v=1
+
+This uses the branch https://github.com/aaron1brooker/Battleships/tree/replit-version. The only difference is that to clear the console in windows the command is "cls" but in replit it is "clear". This rectifies this issue.
+
 ### <ins> High-Level Overview/Challenge Outline </ins>
 
 For this assignment, we were given the opportunity to create/expand upon the commonly known game ‘Battleships’ in a coding language of our choice. The requirements were organised into three separate milestones, each varying in complexity.
