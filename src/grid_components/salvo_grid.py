@@ -59,7 +59,7 @@ class SalvoGrid(AutomatedGrid):
         error_guesses = []
         positions = guesses.split()
 
-        if len(positions) > self.get_boats_left() and len(positions) == 0:
+        if len(positions) > self.get_boats_left() or len(positions) == 0:
             raise UserError(f"Did not give {self.get_boats_left()} positions")
 
         # See if each position is different
