@@ -22,7 +22,7 @@ class HiddenMines(BattleshipGame):
         )
 
         outcomes = player_recieving.shot_recieved_mine(choice)
-        os.system("cls")
+        os.system("clear")
         # update players guess grid
         user_outcomes = []  # this is what the user sees
         for status in outcomes:
@@ -66,10 +66,10 @@ class HiddenMines(BattleshipGame):
                 choice = player_guessing.auto_guess()
                 print(f"{Fore.BLUE}Generating a position... {choice}{Fore.WHITE}")
                 time.sleep(1.5)
-                os.system("cls")
+                os.system("clear")
                 return self.__handle_shot_helper(choice, player_num)
             elif choice == "help":
-                os.system("cls")
+                os.system("clear")
                 input(GUESSING_HELP_MSG)
                 return self.__handle_player_shot(player_num)
 
@@ -77,7 +77,7 @@ class HiddenMines(BattleshipGame):
             if player_guessing.is_guess_repeated(choice):
                 print("This guess has already been made, try again")
                 time.sleep(1.5)
-                os.system("cls")
+                os.system("clear")
                 return self.__handle_player_shot(player_num)
 
             return self.__handle_shot_helper(choice, player_num)
@@ -85,7 +85,7 @@ class HiddenMines(BattleshipGame):
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
-            os.system("cls")
+            os.system("clear")
             return self.__handle_player_shot(player_num)
 
     def __handle_bot_shot(self, player_num: int) -> bool:
@@ -105,7 +105,7 @@ class HiddenMines(BattleshipGame):
         """Where both player and computer choose a position to try to hit their opponent"""
 
         # player 1's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p1_bot:
             if self.__handle_bot_shot(1):
                 return
@@ -116,7 +116,7 @@ class HiddenMines(BattleshipGame):
         input("Press enter to start Player 2's turn...")
 
         # player 2's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p2_bot:
             if self.__handle_bot_shot(2):
                 return
@@ -131,7 +131,7 @@ class HiddenMines(BattleshipGame):
     def play_game(self) -> None:
         """Starts the Game"""
 
-        os.system("cls")
+        os.system("clear")
         input(POSITIONING_HELP_MSG)
 
         # See whether player 1 is a bot and place boats accordingly
@@ -139,14 +139,14 @@ class HiddenMines(BattleshipGame):
         self._player1.auto_place_mines()
 
         input("Press enter to move onto player 2's turn...")
-        os.system("cls")
+        os.system("clear")
 
         # Now we do the same but with player 2
         self._place_boat_helper(2)
         self._player2.auto_place_mines()
 
         input("Press enter to start the game...")
-        os.system("cls")
+        os.system("clear")
         input(GUESSING_HELP_MSG)
-        os.system("cls")
+        os.system("clear")
         self.__players_attack()

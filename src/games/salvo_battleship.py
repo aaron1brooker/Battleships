@@ -23,7 +23,7 @@ class SalvoBattleships(BattleshipGame):
 
         positions = choice.split()
         outcomes = player_recieving.multi_shots_recieved(positions)
-        os.system("cls")
+        os.system("clear")
         player_shooting.multi_shots_sent(positions, outcomes)
         if "lost" in outcomes:
             print(f"{Fore.GREEN}Player {player_num} wins the game!!!{Fore.WHITE}")
@@ -38,7 +38,7 @@ class SalvoBattleships(BattleshipGame):
         player_guessing: SalvoGrid = self._player1 if player_num == 1 else self._player2
 
         try:
-            os.system("cls")
+            os.system("clear")
             player_guessing.display_board(True, player_num)
             boats_left = player_guessing.get_boats_left()
             choice = input(
@@ -56,10 +56,10 @@ class SalvoBattleships(BattleshipGame):
                 # validation is not required as it is generated
                 print(f"{Fore.BLUE}Generating a positions... {choice}{Fore.WHITE}")
                 time.sleep(1.5)
-                os.system("cls")
+                os.system("clear")
                 return self.__handle_shots_helper(choice, player_num)
             elif choice == "help":
-                os.system("cls")
+                os.system("clear")
                 input(SALVO_GUESSING_HELP_MSG)
                 return self.__handle_players_shots(player_num)
 
@@ -75,13 +75,13 @@ class SalvoBattleships(BattleshipGame):
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
-            os.system("cls")
+            os.system("clear")
             return self.__handle_players_shots(player_num)
 
         except RuntimeError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
-            os.system("cls")
+            os.system("clear")
             return self.__handle_players_shots(player_num)
 
     def __handle_bots_shots(self, player_num: int) -> bool:
@@ -98,7 +98,7 @@ class SalvoBattleships(BattleshipGame):
         """Where both player and computer choose a position to try to hit their opponent"""
 
         # player 1's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p1_bot:
             if self.__handle_bots_shots(1):
                 return
@@ -109,7 +109,7 @@ class SalvoBattleships(BattleshipGame):
         input("Press enter to start Player 2's turn...")
 
         # player 2's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p2_bot:
             if self.__handle_bots_shots(2):
                 return
@@ -125,20 +125,20 @@ class SalvoBattleships(BattleshipGame):
     def play_game(self) -> None:
         """Starts the Game"""
 
-        os.system("cls")
+        os.system("clear")
         input(POSITIONING_HELP_MSG)
 
         # See whether player 1 is a bot and place boats accordingly
         self._place_boat_helper(1)
 
         input("Press enter to move onto player 2's turn...")
-        os.system("cls")
+        os.system("clear")
 
         # Now we do the same but with player 2
         self._place_boat_helper(2)
 
         input("Press enter to start the game...")
-        os.system("cls")
+        os.system("clear")
         input(SALVO_GUESSING_HELP_MSG)
-        os.system("cls")
+        os.system("clear")
         self.__players_attack()

@@ -63,7 +63,7 @@ class Battleships:
     def menu(self):
         """Allows the user to choose the game to play"""
 
-        os.system("cls")
+        os.system("clear")
 
         menu_screen = (
             f"{Fore.BLUE}MENU:\n{Fore.WHITE}1) Battleships (Player v Computer)\n2) Battleships (Two player)\n3) Salvo Battleships (Player v Computer)\n"

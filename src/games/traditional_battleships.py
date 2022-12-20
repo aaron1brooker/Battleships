@@ -23,7 +23,7 @@ class TraditionalBattleships(BattleshipGame):
         )
 
         outcome = player_recieving.shot_recieved(choice)
-        os.system("cls")
+        os.system("clear")
         # update players guess grid
         player_shooting.shot_sent(choice, outcome)
         player_shooting.display_board(True, player_num)
@@ -59,10 +59,10 @@ class TraditionalBattleships(BattleshipGame):
                 choice = player_guessing.auto_guess()
                 print(f"{Fore.BLUE}Generating a position... {choice}{Fore.WHITE}")
                 time.sleep(1.5)
-                os.system("cls")
+                os.system("clear")
                 return self.__handle_shot_helper(choice, player_num)
             elif choice == "help":
-                os.system("cls")
+                os.system("clear")
                 input(GUESSING_HELP_MSG)
                 return self.__handle_player_shot(player_num)
 
@@ -70,7 +70,7 @@ class TraditionalBattleships(BattleshipGame):
             if player_guessing.is_guess_repeated(choice):
                 print("This guess has already been made, try again")
                 time.sleep(1.5)
-                os.system("cls")
+                os.system("clear")
                 return self.__handle_player_shot(player_num)
 
             return self.__handle_shot_helper(choice, player_num)
@@ -78,7 +78,7 @@ class TraditionalBattleships(BattleshipGame):
         except UserError as e:
             print(f"{Fore.RED}{e}. Please try again{Fore.WHITE}")
             time.sleep(1.5)
-            os.system("cls")
+            os.system("clear")
             return self.__handle_player_shot(player_num)
 
     def __handle_bot_shot(self, player_num: int) -> bool:
@@ -100,7 +100,7 @@ class TraditionalBattleships(BattleshipGame):
         """Where both player and computer choose a position to try to hit their opponent"""
 
         # player 1's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p1_bot:
             if self.__handle_bot_shot(1):
                 return
@@ -111,7 +111,7 @@ class TraditionalBattleships(BattleshipGame):
         input("Press enter to start Player 2's turn...")
 
         # player 2's turn to attack
-        os.system("cls")
+        os.system("clear")
         if self._is_p2_bot:
             if self.__handle_bot_shot(2):
                 return
@@ -127,20 +127,20 @@ class TraditionalBattleships(BattleshipGame):
     def play_game(self) -> None:
         """Starts the Game"""
 
-        os.system("cls")
+        os.system("clear")
         input(POSITIONING_HELP_MSG)
 
         # See whether player 1 is a bot and place boats accordingly
         self._place_boat_helper(1)
 
         input("Press enter to move onto player 2's turn...")
-        os.system("cls")
+        os.system("clear")
 
         # Now we do the same but with player 2
         self._place_boat_helper(2)
 
         input("Press enter to start the game...")
-        os.system("cls")
+        os.system("clear")
         input(GUESSING_HELP_MSG)
-        os.system("cls")
+        os.system("clear")
         self.__players_attack()
